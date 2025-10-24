@@ -9,3 +9,4 @@ dist/
 .vscode/
 .idea/
 qwall2-mcp
+config.yaml
