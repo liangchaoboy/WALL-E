@@ -63,6 +63,28 @@
 
 ---
 
+### 2.6 模型参数配置 🔧
+
+**[MODEL_PARAMS_GUIDE.md](MODEL_PARAMS_GUIDE.md)** - 完整的模型参数配置指南
+
+**适合人群**：需要灵活配置 AI 模型的用户  
+**阅读时间**：20 分钟  
+**内容**：
+- ✅ 完整的参数列表（API Key + Base URL + Model Name）
+- ✅ 所有 AI 服务的环境变量说明
+- ✅ 多种使用场景示例
+- ✅ 常见模型名称参考
+- ✅ 配置优先级说明
+- ✅ 故障排查和最佳实践
+
+**推荐场景**：
+- 需要使用不同的 AI 模型
+- 配置多个 AI 服务
+- 使用 .env 文件管理配置
+- 开发/生产环境分离
+
+---
+
 ### 3. 系统架构 🏗️
 
 **[ARCHITECTURE.md](ARCHITECTURE.md)** - 完整的技术架构文档
@@ -140,6 +162,9 @@
 
 #### 使用第三方 API（国内代理、OneAPI）
 → 阅读 [THIRD_PARTY_API.md](THIRD_PARTY_API.md)
+
+#### 配置模型参数（API Key + Base URL + Model）
+→ 阅读 [MODEL_PARAMS_GUIDE.md](MODEL_PARAMS_GUIDE.md)
 
 #### 理解系统架构
 → 阅读 [ARCHITECTURE.md](ARCHITECTURE.md) 的"模块设计"部分
@@ -357,7 +382,8 @@ A: 查看 [QUICKSTART.md](QUICKSTART.md#故障排查)
 
 - **项目概览**：[README.md](README.md)
 - **快速开始**：[QUICKSTART.md](QUICKSTART.md)
-- **第三方 API**：[THIRD_PARTY_API.md](THIRD_PARTY_API.md) ⭐ 新增
+- **第三方 API**：[THIRD_PARTY_API.md](THIRD_PARTY_API.md) 
+- **模型参数**：[MODEL_PARAMS_GUIDE.md](MODEL_PARAMS_GUIDE.md) ⭐ 新增
 - **系统架构**：[ARCHITECTURE.md](ARCHITECTURE.md)
 - **功能演示**：[DEMO.md](DEMO.md)
 - **项目状态**：[STATUS.md](STATUS.md)

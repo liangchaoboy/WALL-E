@@ -21,14 +21,20 @@ qwall2 支持任何 OpenAI 兼容的 API 服务，包括：
 # ChatGPT 使用第三方 API
 export OPENAI_API_KEY="sk-your-key"
 export OPENAI_BASE_URL="https://your-proxy.com/v1"
+export OPENAI_MODEL="gpt-3.5-turbo"  # 自定义模型名称
 
 # Claude 使用第三方 API
 export ANTHROPIC_API_KEY="sk-your-key"
 export ANTHROPIC_BASE_URL="https://your-claude-proxy.com/v1"
+export ANTHROPIC_MODEL="claude-3-5-sonnet-20241022"  # 自定义模型名称
 
 # DeepSeek 使用第三方 API
 export DEEPSEEK_API_KEY="sk-your-key"
 export DEEPSEEK_BASE_URL="https://your-deepseek-proxy.com/v1"
+export DEEPSEEK_MODEL="deepseek-chat"  # 自定义模型名称
+
+# Whisper STT 模型
+export WHISPER_MODEL="whisper-1"  # 自定义 Whisper 模型
 
 # 启动服务
 ./start.sh
@@ -54,6 +60,92 @@ ai:
     api_key: "sk-your-key"
     model: "deepseek-chat"
     base_url: "https://your-deepseek-proxy.com/v1"
+```
+
+---
+
+## 🎯 模型名称配置指南
+
+### 为什么需要配置模型名称？
+
+不同的第三方服务可能支持不同的模型名称：
+
+- **原生 OpenAI**：`gpt-3.5-turbo`, `gpt-4`, `gpt-4-turbo`
+- **国内代理**：可能使用相同或略有不同的名称
+- **OneAPI**：可自定义模型别名
+- **私有部署**：完全自定义的模型名称
+
+### 常见模型名称对照表
+
+| 服务类型 | 模型名称示例 |
+|----------|----------------|
+| **OpenAI 原生** | `gpt-3.5-turbo`, `gpt-4`, `gpt-4-turbo`, `gpt-4o` |
+| **Claude** | `claude-3-5-sonnet-20241022`, `claude-3-opus-20240229` |
+| **DeepSeek** | `deepseek-chat`, `deepseek-coder` |
+| **Qwen** | `qwen-turbo`, `qwen-plus`, `qwen-max` |
+| **GLM** | `glm-4`, `glm-3-turbo` |
+| **Gemini** | `gemini-pro`, `gemini-1.5-pro` |
+| **私有服务** | 根据部署时的配置，如 `llama-2-7b`, `mistral-7b` |
+
+### 配置示例
+
+#### 使用 GPT-4
+
+```bash
+export OPENAI_API_KEY="sk-your-key"
+export OPENAI_MODEL="gpt-4"  # 使用 GPT-4 模型
+./start.sh
+```
+
+#### 使用 OneAPI 的自定义模型
+
+```bash
+export OPENAI_API_KEY="sk-oneapi-key"
+export OPENAI_BASE_URL="https://oneapi.example.com/v1"
+export OPENAI_MODEL="my-custom-model"  # OneAPI 中配置的模型别名
+./start.sh
+```
+
+#### 使用私有部署的 Llama 模型
+
+```bash
+export OPENAI_API_KEY="none"
+export OPENAI_BASE_URL="http://localhost:8000/v1"
+export OPENAI_MODEL="llama-2-13b-chat"  # 私有服务中的模型名
+./start.sh
+```
+
+### Whisper 模型配置
+
+Whisper STT 也支持自定义模型名称：
+
+```bash
+# 原生 OpenAI Whisper
+export WHISPER_MODEL="whisper-1"  # 默认
+
+# 第三方服务可能支持的名称
+export WHISPER_MODEL="whisper-large-v3"  # 示例
+```
+
+### 环境变量优先级
+
+配置的优先级顺序：
+
+```
+环境变量 (OPENAI_MODEL) > config.yaml 中的 model 字段 > 默认值
+```
+
+**示例**：
+```yaml
+# config.yaml
+ai:
+  chatgpt:
+    model: "${OPENAI_MODEL:-gpt-3.5-turbo}"  # 使用环境变量，默认 gpt-3.5-turbo
+```
+
+```bash
+# 环境变量会覆盖配置文件
+export OPENAI_MODEL="gpt-4"  # 最终使用 gpt-4
 ```
 
 ---

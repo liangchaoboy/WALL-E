@@ -27,12 +27,18 @@ export DEEPSEEK_API_KEY="sk-your-key-here"
 # 可选：自定义 API 接口地址（支持第三方兼容服务）
 # OpenAI 兼容接口（如：国内代理、私有部署、OneAPI 等）
 export OPENAI_BASE_URL="https://your-proxy.com/v1"
+export OPENAI_MODEL="gpt-3.5-turbo"  # 自定义模型名称
 
 # Claude 兼容接口
 export ANTHROPIC_BASE_URL="https://your-claude-proxy.com/v1"
+export ANTHROPIC_MODEL="claude-3-5-sonnet-20241022"  # 自定义模型名称
 
 # DeepSeek 兼容接口
 export DEEPSEEK_BASE_URL="https://your-deepseek-proxy.com/v1"
+export DEEPSEEK_MODEL="deepseek-chat"  # 自定义模型名称
+
+# Whisper STT 模型
+export WHISPER_MODEL="whisper-1"  # 自定义 Whisper 模型名称
 ```
 
 ### 2. 启动服务
@@ -136,24 +142,37 @@ stt:
 ai:
   default_provider: "chatgpt"  # 默认 AI 模型
   chatgpt:
-    model: "gpt-3.5-turbo"
-    base_url: "https://api.openai.com/v1"  # 可自定义为第三方 API
+    model: "gpt-3.5-turbo"               # 模型名称（可通过环境变量覆盖）
+    base_url: "https://api.openai.com/v1"  # API 地址（可自定义为第三方）
   claude:
-    model: "claude-3-5-sonnet-20241022"
-    base_url: "https://api.anthropic.com/v1"  # 可自定义为第三方 API
+    model: "claude-3-5-sonnet-20241022"     # 模型名称
+    base_url: "https://api.anthropic.com/v1"  # API 地址
   deepseek:
-    model: "deepseek-chat"
-    base_url: "https://api.deepseek.com/v1"  # 可自定义为第三方 API
+    model: "deepseek-chat"                   # 模型名称
+    base_url: "https://api.deepseek.com/v1"  # API 地址
 
 map:
   default_provider: "baidu"    # 默认地图服务
 ```
 
-**第三方 API 服务示例**：
+**🔧 环境变量覆盖示例**：
+```bash
+# 环境变量会覆盖 config.yaml 中的配置
+export OPENAI_MODEL="gpt-4"  # 使用 GPT-4 模型
+export ANTHROPIC_MODEL="claude-3-opus-20240229"  # 使用 Claude Opus
+```
+
+**🌐 第三方 API 服务示例**：
 - 🇨🇳 国内 API 代理：`https://api.openai-proxy.com/v1`
 - 🔧 OneAPI 服务：`https://your-oneapi.com/v1`
 - 🏢 私有部署：`https://your-private-llm.com/v1`
 - 🌐 其他兼容服务：任何 OpenAI 兼容的 API
+
+**🎯 常见模型名称**：
+- OpenAI: `gpt-3.5-turbo`, `gpt-4`, `gpt-4-turbo`
+- Claude: `claude-3-5-sonnet-20241022`, `claude-3-opus-20240229`
+- DeepSeek: `deepseek-chat`, `deepseek-coder`
+- 第三方服务：根据服务商提供的模型名称
 
 ## 测试验证
 

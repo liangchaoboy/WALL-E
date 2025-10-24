@@ -64,6 +64,7 @@ export OPENAI_API_KEY="sk-your-openai-key"
 
 # 可选：使用第三方兼容 API（国内代理、OneAPI 等）
 export OPENAI_BASE_URL="https://your-proxy.com/v1"
+export OPENAI_MODEL="gpt-3.5-turbo"  # 自定义模型
 ```
 
 **2️⃣ 启动服务**
@@ -92,8 +93,8 @@ stt:
 ai:
   default_provider: "chatgpt"   # 默认 AI
   chatgpt:
-    model: "gpt-3.5-turbo"      # ChatGPT 模型
-    base_url: "..."             # 可自定义第三方 API
+    model: "gpt-3.5-turbo"      # 模型名称（可环境变量覆盖）
+    base_url: "..."             # API 地址（可自定义）
 
 map:
   default_provider: "baidu"     # 默认地图
@@ -104,6 +105,11 @@ map:
 - OneAPI 聚合服务
 - 私有部署的模型服务
 - 任何 OpenAI 兼容的 API
+
+**🔧 环境变量覆盖**：
+- `OPENAI_MODEL` - 自定义模型名称
+- `OPENAI_BASE_URL` - 自定义 API 地址
+- 支持所有 AI 服务（ChatGPT/Claude/DeepSeek）
 
 > 📝 完整配置说明请查看 [config.yaml](config.yaml)
 
