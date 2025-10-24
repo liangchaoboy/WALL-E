@@ -1,273 +1,230 @@
-# 🚀 qwall2 - AI 地图导航系统
+# 🚀 qwall2 - AI 智能地图导航系统
 
-基于 MCP 的 AI 智能地图导航系统，支持文字和语音输入，自动打开地图导航。
+> 基于 Go + AI 的智能地图导航系统，支持文字和语音输入，自动解析并打开地图导航。
 
-## ✨ 功能特性
+[![Go Version](https://img.shields.io/badge/Go-1.23.0-blue.svg)](https://golang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Production-success.svg)](STATUS.md)
 
-- 🎤 **多模态输入**：支持文字输入和语音输入
-- 🤖 **多 AI 支持**：支持 ChatGPT、Claude、DeepSeek 等多个大模型
-- 🗣️ **智能 STT**：OpenAI Whisper 优先，失败后自动降级到本地处理
-- 🗺️ **多地图服务**：支持百度地图、高德地图、Google Maps
-- 🌐 **Web 界面**：简洁美观的 Web UI，响应式设计
-- 📦 **独立部署**：无需依赖 Claude Desktop，独立运行
+## ✨ 核心特性
+
+### 🎯 智能交互
+- 🎤 **双模输入**：文字输入 + 语音录制
+- 🤖 **多 AI 引擎**：ChatGPT、Claude、DeepSeek 自由切换
+- 🧠 **智能解析**：自动提取起点和终点，无需固定格式
+
+### 🔧 技术优势
+- 🗣️ **智能 STT**：OpenAI Whisper 优先，失败自动降级到本地
+- 🗺️ **多地图支持**：百度、高德、Google Maps
+- 🌐 **独立部署**：Web 界面 + Go 后端，无需第三方依赖
+- 📦 **开箱即用**：一键启动，配置简单
 
 ## 🏗️ 系统架构
 
 ```
-用户（Web 页面）
-    ↓ 文字/语音输入
-Go HTTP 服务器 (:8080)
-    ↓
-STT 模块（如果是语音）
-    ├─ OpenAI Whisper（优先）
-    └─ 本地降级（whisper.cpp/vosk）
-    ↓
-AI 处理模块
-    ├─ ChatGPT
-    ├─ Claude
-    └─ DeepSeek
-    ↓ 提取起点终点
-地图 URL 生成
-    ↓
-返回给前端 → 跳转到地图
+┌─────────────────────────────────────┐
+│      Web 前端 (浏览器)               │
+│   文字输入  |  语音录制               │
+└──────────────┬──────────────────────┘
+               ↓ HTTP POST /api/navigate
+┌──────────────────────────────────────┐
+│     Go HTTP 服务器 (:8080)            │
+└──────────────┬───────────────────────┘
+               ↓
+    ┌──────────┴──────────┐
+    ↓                     ↓
+┌─────────┐         ┌──────────┐
+│ STT 模块 │         │ AI 模块   │
+│ (语音)   │         │ (意图提取) │
+└─────────┘         └──────────┘
+    ↓                     ↓
+Whisper API        ChatGPT/Claude
+    ↓                     ↓
+本地降级           DeepSeek
+    └──────────┬──────────┘
+               ↓
+         地图 URL 生成
+      (百度/高德/Google)
+               ↓
+         返回前端 → 跳转
 ```
 
-## 📦 安装部署
+## 🚀 快速开始
 
-### 1. 克隆项目
+### 前置要求
 
+- Go 1.23.0+
+- OpenAI API Key（必需）
+
+### 三步启动
+
+**1️⃣ 配置 API Key**
 ```bash
-git clone https://github.com/sanmu/qwall2.git
-cd qwall2
+export OPENAI_API_KEY="sk-your-openai-key"
 ```
 
-### 2. 配置环境变量
-
+**2️⃣ 启动服务**
 ```bash
-# 必需：OpenAI API Key（用于 ChatGPT 和 Whisper STT）
-export OPENAI_API_KEY="sk-..."
-
-# 可选：其他 AI 提供商
-export ANTHROPIC_API_KEY="sk-ant-..."  # Claude
-export DEEPSEEK_API_KEY="sk-..."       # DeepSeek
-```
-
-### 3. 编译项目
-
-```bash
-go build -o qwall2-server .
-```
-
-### 4. 启动服务
-
-```bash
-# 使用启动脚本（推荐）
 ./start.sh
-
-# 或直接运行
-./qwall2-server --config config.yaml
 ```
 
-### 5. 访问 Web 界面
+**3️⃣ 访问界面**
 
-打开浏览器访问：`http://localhost:8080`
+打开浏览器：**http://localhost:8080**
 
-## ⚙️ 配置说明
+> 💡 详细说明请查看 [QUICKSTART.md](QUICKSTART.md)
 
-编辑 `config.yaml` 文件：
+## ⚙️ 配置
+
+编辑 `config.yaml`：
 
 ```yaml
-# HTTP 服务器配置
 server:
-  port: 8080
-  host: "0.0.0.0"
+  port: 8080                    # 服务端口
 
-# STT 配置
 stt:
-  provider: "auto"              # auto, openai, local
-  openai_key: "${OPENAI_API_KEY}"
+  provider: "auto"              # STT 提供商
   enable_fallback: true         # 启用降级
 
-# AI 配置
 ai:
-  default_provider: "chatgpt"   # chatgpt, claude, deepseek
+  default_provider: "chatgpt"   # 默认 AI
   chatgpt:
-    api_key: "${OPENAI_API_KEY}"
-    model: "gpt-3.5-turbo"
-  claude:
-    api_key: "${ANTHROPIC_API_KEY}"
-    model: "claude-3-5-sonnet-20241022"
-  deepseek:
-    api_key: "${DEEPSEEK_API_KEY}"
-    model: "deepseek-chat"
+    model: "gpt-3.5-turbo"      # ChatGPT 模型
 
-# 地图配置
 map:
-  default_provider: "baidu"     # baidu, amap, google
+  default_provider: "baidu"     # 默认地图
 ```
 
-## 📖 使用方法
+> 📝 完整配置说明请查看 [config.yaml](config.yaml)
+
+## 📖 使用示例
 
 ### 文字输入
 
-1. 在 Web 页面的输入框中输入导航需求
-2. 选择 AI 提供商和地图服务
-3. 点击"开始导航"按钮
-4. 系统会自动提取起点和终点，跳转到地图页面
+```
+输入："从北京去上海"
+结果：起点=北京，终点=上海 → 打开地图
 
-**示例**：
-- "我要从北京去上海"
-- "去天安门"
-- "从西湖到灵隐寺"
+输入："去天安门"
+结果：起点=当前位置，终点=天安门 → 打开地图
+```
 
 ### 语音输入
 
-1. 点击"开始录音"按钮（或按住空格键）
-2. 说出导航需求
+```
+1. 点击"开始录音"
+2. 说出："从西湖到灵隐寺"
 3. 点击"停止录音"
-4. 系统自动识别语音并导航
-
-## 🔧 API 接口
-
-### POST /api/navigate
-
-导航请求接口
-
-**请求**：
-```json
-{
-  "type": "text",              // text 或 audio
-  "input": "从北京去上海",      // 文字输入
-  "ai_provider": "chatgpt",    // AI 提供商
-  "map_provider": "baidu"      // 地图提供商
-}
+4. 自动识别并导航
 ```
 
-**响应**：
-```json
-{
-  "success": true,
-  "url": "https://map.baidu.com/...",
-  "start": "北京",
-  "end": "上海",
-  "ai_provider": "ChatGPT",
-  "map_provider": "baidu"
-}
+## 🔌 API 接口
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/api/navigate` | POST | 导航请求 |
+| `/api/health` | GET | 健康检查 |
+
+**导航请求示例**：
+```bash
+curl -X POST http://localhost:8080/api/navigate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "text",
+    "input": "从北京去上海",
+    "ai_provider": "chatgpt",
+    "map_provider": "baidu"
+  }'
 ```
 
-### GET /api/health
+> 📚 完整 API 文档请查看 [ARCHITECTURE.md](ARCHITECTURE.md)
 
-健康检查接口
+## 🌟 核心优势
 
-**响应**：
-```json
-{
-  "status": "ok",
-  "stt": "Auto (OpenAI → Local)",
-  "ai": ["chatgpt", "claude"]
-}
+### 智能降级机制
+
+```
+OpenAI Whisper API (优先)
+    ↓ 失败
+whisper.cpp (本地)
+    ↓ 失败
+vosk (轻量级)
+    ↓ 失败
+友好提示
 ```
 
-## 🌟 特色功能
+### 多 AI 引擎
 
-### 1. STT 自动降级
+| AI 模型 | 特点 | 推荐场景 |
+|---------|------|----------|
+| ChatGPT | 快速经济 | 日常使用 |
+| Claude | 智能准确 | 复杂场景 |
+| DeepSeek | 中文优化 | 国内用户 |
 
-语音识别使用智能降级策略：
+### 自然语言理解
 
-1. **优先**：OpenAI Whisper API（高质量）
-2. **降级 1**：whisper.cpp（本地模型）
-3. **降级 2**：vosk（轻量级本地识别）
-4. **最终**：友好的错误提示
+- ✅ 自动提取起点终点
+- ✅ 支持口语化表达
+- ✅ 智能默认当前位置
 
-### 2. 多 AI 模型支持
-
-统一接口设计，轻松切换：
-
-- **ChatGPT**：OpenAI 的 GPT-3.5/GPT-4
-- **Claude**：Anthropic 的 Claude 3.5
-- **DeepSeek**：DeepSeek Chat
-
-### 3. 智能意图提取
-
-AI 会从自然语言中提取：
-- 起点地址（如果未提供，默认为"当前位置"）
-- 终点地址
-- 自动过滤噪音，只保留关键信息
-
-## 🛠️ 开发说明
-
-### 项目结构
+## 📁 项目结构
 
 ```
 qwall2/
-├── main.go                    # 程序入口
-├── config.yaml                # 配置文件
-├── internal/
-│   ├── ai/                    # AI 处理模块
-│   │   ├── ai.go              # 接口定义
-│   │   ├── chatgpt.go         # ChatGPT 实现
-│   │   ├── claude.go          # Claude 实现
-│   │   └── deepseek.go        # DeepSeek 实现
-│   ├── stt/                   # STT 模块
-│   │   ├── stt.go             # 接口定义
-│   │   ├── openai.go          # OpenAI Whisper
-│   │   └── local.go           # 本地降级
-│   ├── server/                # HTTP 服务器
-│   │   └── server.go
-│   └── config/                # 配置管理
-│       └── config.go
+├── internal/              # 核心模块
+│   ├── ai/               # AI 处理（ChatGPT/Claude/DeepSeek）
+│   ├── stt/              # STT（Whisper + 本地降级）
+│   ├── server/           # HTTP 服务器
+│   └── config/           # 配置管理
 ├── pkg/
-│   └── mapprovider/           # 地图服务
-│       └── mapprovider.go
-└── web/                       # Web 前端
-    ├── index.html
-    └── static/
-        ├── css/style.css
-        └── js/app.js
+│   └── mapprovider/      # 地图服务（百度/高德/Google）
+├── web/                  # Web 前端
+│   ├── index.html
+│   └── static/
+├── main.go               # 程序入口
+└── config.yaml           # 配置文件
 ```
 
-### 添加新的 AI 提供商
+## 🧪 测试
 
-1. 在 `internal/ai/` 下创建新文件
-2. 实现 `Client` 接口
-3. 在 `ai.go` 中注册新提供商
-4. 在 `config.yaml` 中添加配置
+运行自动化测试：
 
-### 添加新的地图服务
+```bash
+./test.sh
+```
 
-1. 在 `pkg/mapprovider/mapprovider.go` 中添加新的生成函数
-2. 在配置中添加新的地图选项
+测试覆盖：
+- ✅ 服务器运行
+- ✅ API 端点
+- ✅ 静态文件
+- ✅ 健康检查
 
 ## 🐛 故障排查
 
-### 问题：编译失败
+| 问题 | 解决方案 |
+|------|----------|
+| API Key 无效 | 检查并重新设置 `OPENAI_API_KEY` |
+| 端口被占用 | 修改 `config.yaml` 中的端口号 |
+| 语音识别失败 | 确认 API Key 和浏览器权限 |
 
-```bash
-# 更新依赖
-go mod tidy
-go mod download
-```
+> 💡 更多帮助请查看 [QUICKSTART.md](QUICKSTART.md)
 
-### 问题：STT 失败
+## 📚 文档
 
-- 检查 OPENAI_API_KEY 是否正确
-- 如果不使用语音，可以只用文字输入
-- 本地降级需要安装 whisper.cpp 或 vosk
-
-### 问题：AI 处理失败
-
-- 确认 API Key 正确且有效
-- 检查网络连接
-- 查看服务器日志了解详细错误
-
-## 📝 许可证
-
-MIT License
+- [QUICKSTART.md](QUICKSTART.md) - 快速开始指南
+- [ARCHITECTURE.md](ARCHITECTURE.md) - 系统架构详解
+- [DEMO.md](DEMO.md) - 演示和测试用例
+- [STATUS.md](STATUS.md) - 项目状态报告
 
 ## 🤝 贡献
 
 欢迎提交 Issue 和 Pull Request！
 
-## 📧 联系方式
+## 📄 许可证
 
-如有问题，请提交 Issue。
+MIT License
+
+---
+
+**快速开始**: `export OPENAI_API_KEY="sk-..." && ./start.sh`  
+**访问地址**: http://localhost:8080
