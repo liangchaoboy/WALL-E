@@ -76,7 +76,7 @@ export OPENAI_MODEL="gpt-3.5-turbo"  # 自定义模型
 
 打开浏览器：**http://localhost:8080**
 
-> 💡 详细说明请查看 [QUICKSTART.md](QUICKSTART.md)
+> 💡 详细说明请查看 [docs/QUICKSTART.md](docs/QUICKSTART.md)
 
 ## ⚙️ 配置
 
@@ -112,6 +112,10 @@ map:
 - 支持所有 AI 服务（ChatGPT/Claude/DeepSeek）
 
 > 📝 完整配置说明请查看 [config.yaml](config.yaml)
+
+> 🌐 第三方 API 配置请查看 [docs/THIRD_PARTY_API.md](docs/THIRD_PARTY_API.md)
+
+> 🔧 模型参数配置请查看 [docs/MODEL_PARAMS_GUIDE.md](docs/MODEL_PARAMS_GUIDE.md)
 
 ## 📖 使用示例
 
@@ -153,7 +157,7 @@ curl -X POST http://localhost:8080/api/navigate \
   }'
 ```
 
-> 📚 完整 API 文档请查看 [ARCHITECTURE.md](ARCHITECTURE.md)
+> 📚 完整 API 文档请查看 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ## 🌟 核心优势
 
@@ -223,14 +227,25 @@ qwall2/
 | 端口被占用 | 修改 `config.yaml` 中的端口号 |
 | 语音识别失败 | 确认 API Key 和浏览器权限 |
 
-> 💡 更多帮助请查看 [QUICKSTART.md](QUICKSTART.md)
+> 💡 更多帮助请查看 [docs/QUICKSTART.md](docs/QUICKSTART.md)
 
 ## 📚 文档
 
-- [QUICKSTART.md](QUICKSTART.md) - 快速开始指南
-- [ARCHITECTURE.md](ARCHITECTURE.md) - 系统架构详解
-- [DEMO.md](DEMO.md) - 演示和测试用例
-- [STATUS.md](STATUS.md) - 项目状态报告
+### 快速开始
+- ⚡ [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - 快速参考卡（推荐）
+- 🚀 [docs/QUICKSTART.md](docs/QUICKSTART.md) - 快速开始指南
+
+### 详细文档
+- 🏛️ [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - 系统架构详解
+- 🎬 [docs/DEMO.md](docs/DEMO.md) - 演示和测试用例
+- 📊 [docs/STATUS.md](docs/STATUS.md) - 项目状态报告
+
+### 配置指南
+- 🌐 [docs/THIRD_PARTY_API.md](docs/THIRD_PARTY_API.md) - 第三方 API 配置
+- 🔧 [docs/MODEL_PARAMS_GUIDE.md](docs/MODEL_PARAMS_GUIDE.md) - 模型参数配置
+
+### 文档导航
+- 📚 [docs/DOCS.md](docs/DOCS.md) - 文档索引导航
 
 ## 🤝 贡献
 

@@ -8,7 +8,7 @@
 
 ### 1. 快速开始 🚀
 
-**[README.md](README.md)** - 项目概览和快速入门
+**[../README.md](../README.md)** - 项目概览和快速入门
 
 **适合人群**：所有用户  
 **阅读时间**：5 分钟  
@@ -152,7 +152,7 @@
 ### 我想...
 
 #### 快速上手使用
-→ 阅读 [README.md](README.md) 的"快速开始"部分
+→ 阅读 [../README.md](../README.md) 的"快速开始"部分
 
 #### 了解完整功能
 → 阅读 [DEMO.md](DEMO.md) 的"功能演示"部分
@@ -188,7 +188,7 @@
 ### 路径 1：用户快速上手
 
 ```
-1. README.md（快速开始）
+1. ../README.md（快速开始）
    ↓
 2. QUICKSTART.md（详细教程）
    ↓
@@ -203,7 +203,7 @@
 ### 路径 2：开发者深入理解
 
 ```
-1. README.md（项目概览）
+1. ../README.md（项目概览）
    ↓
 2. ARCHITECTURE.md（系统架构）
    ↓
@@ -236,37 +236,37 @@
 
 ### AI 相关
 
-- **AI 模型支持**：[README.md](README.md#核心特性)
+- **AI 模型支持**：[../README.md](../README.md#核心特性)
 - **AI 接口设计**：[ARCHITECTURE.md](ARCHITECTURE.md#ai-处理模块)
 - **AI 使用示例**：[DEMO.md](DEMO.md#演示-4-切换-ai-模型)
 
 ### STT 相关
 
-- **STT 降级策略**：[README.md](README.md#核心优势)
+- **STT 降级策略**：[../README.md](../README.md#核心优势)
 - **STT 模块设计**：[ARCHITECTURE.md](ARCHITECTURE.md#stt-模块)
 - **STT 测试**：[DEMO.md](DEMO.md#演示-3-语音导航)
 
 ### 地图相关
 
-- **支持的地图**：[README.md](README.md#核心特性)
+- **支持的地图**：[../README.md](../README.md#核心特性)
 - **地图 URL 生成**：[ARCHITECTURE.md](ARCHITECTURE.md#地图服务模块)
 - **地图切换**：[DEMO.md](DEMO.md#演示-5-切换地图服务)
 
 ### API 相关
 
-- **API 概览**：[README.md](README.md#api-接口)
+- **API 概览**：[../README.md](../README.md#api-接口)
 - **API 规范**：[ARCHITECTURE.md](ARCHITECTURE.md#api-规范)
 - **API 测试**：[DEMO.md](DEMO.md#api-测试)
 
 ### 配置相关
 
-- **快速配置**：[README.md](README.md#配置)
+- **快速配置**：[../README.md](../README.md#配置)
 - **详细配置**：[QUICKSTART.md](QUICKSTART.md#配置说明)
 - **配置管理**：[ARCHITECTURE.md](ARCHITECTURE.md#配置管理模块)
 
 ### 部署相关
 
-- **快速部署**：[README.md](README.md#快速开始)
+- **快速部署**：[../README.md](../README.md#快速开始)
 - **生产部署**：[ARCHITECTURE.md](ARCHITECTURE.md#部署架构)
 - **部署状态**：[STATUS.md](STATUS.md#部署状态)
 
@@ -331,7 +331,7 @@
 ### 安装相关
 
 **Q: 需要什么前置条件？**  
-A: 查看 [README.md](README.md#快速开始)
+A: 查看 [../README.md](../README.md#快速开始)
 
 **Q: 如何配置 API Key？**  
 A: 查看 [QUICKSTART.md](QUICKSTART.md#配置-api-key)
@@ -380,7 +380,7 @@ A: 查看 [QUICKSTART.md](QUICKSTART.md#故障排查)
 
 ## 🎯 快速链接
 
-- **项目概览**：[README.md](README.md)
+- **项目概览**：[../README.md](../README.md)
 - **快速开始**：[QUICKSTART.md](QUICKSTART.md)
 - **第三方 API**：[THIRD_PARTY_API.md](THIRD_PARTY_API.md) 
 - **模型参数**：[MODEL_PARAMS_GUIDE.md](MODEL_PARAMS_GUIDE.md) ⭐ 新增

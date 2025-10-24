@@ -259,7 +259,7 @@ server:
 ## 技术支持
 
 - 提交 Issue：[GitHub Issues](https://github.com/sanmu/qwall2/issues)
-- 查看文档：`README.md`
+- 查看文档：[../README.md](../README.md)
 - 运行测试：`./test.sh`
 
 ## 许可证
