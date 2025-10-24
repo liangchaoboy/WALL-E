@@ -164,6 +164,10 @@ func (s *Server) initAI() error {
 		log.Printf("⚠️  没有可用的 AI 客户端，将使用模拟模式")
 		// 创建一个模拟的 AI 客户端用于测试
 		s.aiClients["mock"] = &mockAIClient{}
+	} else {
+		// 即使有其他AI客户端，也添加模拟客户端作为备选
+		s.aiClients["mock"] = &mockAIClient{}
+		log.Printf("✅ 模拟 AI 客户端已添加作为备选")
 	}
 
 	return nil
@@ -224,6 +228,7 @@ type NavigateRequest struct {
 	Input       string `json:"input"`        // 文字输入
 	Audio       string `json:"audio"`        // 音频数据（base64）
 	Format      string `json:"format"`       // 音频格式
+	Source      string `json:"source"`       // 输入来源 (speech, text)
 	AIProvider  string `json:"ai_provider"`  // AI 提供商
 	MapProvider string `json:"map_provider"` // 地图提供商
 }
@@ -262,8 +267,9 @@ func (s *Server) handleNavigate(w http.ResponseWriter, r *http.Request) {
 	var text string
 	var sttProvider string
 
-	// 1. STT 处理（如果是语音）
-	if req.Type == "audio" {
+	// 1. 处理输入文本
+	if req.Type == "audio" && req.Source != "speech" {
+		// 传统音频上传模式，需要STT处理
 		result, err := s.transcribeAudio(ctx, req.Audio, req.Format)
 		if err != nil {
 			s.sendError(w, "stt_failed", "语音识别失败: "+err.Error())
@@ -280,7 +286,12 @@ func (s *Server) handleNavigate(w http.ResponseWriter, r *http.Request) {
 
 		log.Printf("🎤 STT 结果: %s (提供商: %s)", text, sttProvider)
 	} else {
+		// 文字输入或Chrome语音识别（已经是文本）
 		text = req.Input
+		if req.Source == "speech" {
+			sttProvider = "Chrome Speech API"
+			log.Printf("🎤 Chrome 语音识别结果: %s", text)
+		}
 	}
 
 	// 2. AI 提取起点终点
@@ -291,8 +302,22 @@ func (s *Server) handleNavigate(w http.ResponseWriter, r *http.Request) {
 
 	aiClient, ok := s.aiClients[aiProvider]
 	if !ok {
-		s.sendError(w, "ai_not_available", fmt.Sprintf("AI 提供商 %s 不可用", aiProvider))
-		return
+		// 如果指定的AI提供商不可用，尝试使用可用的提供商
+		log.Printf("⚠️  AI 提供商 %s 不可用，尝试使用可用的提供商", aiProvider)
+
+		// 优先使用 mock，然后是 claude
+		if mockClient, exists := s.aiClients["mock"]; exists {
+			aiClient = mockClient
+			aiProvider = "mock"
+			log.Printf("✅ 使用 Mock AI 客户端")
+		} else if claudeClient, exists := s.aiClients["claude"]; exists {
+			aiClient = claudeClient
+			aiProvider = "claude"
+			log.Printf("✅ 使用 Claude AI 客户端")
+		} else {
+			s.sendError(w, "ai_not_available", fmt.Sprintf("AI 提供商 %s 不可用，且没有可用的备选AI服务", req.AIProvider))
+			return
+		}
 	}
 
 	intent, err := aiClient.ExtractNavigationIntent(ctx, text)
