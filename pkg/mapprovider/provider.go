@@ -13,6 +13,8 @@ const (
 	Baidu MapProvider = "baidu"
 	// Amap 高德地图
 	Amap MapProvider = "amap"
+	// Google Google Maps（支持国际路线）
+	Google MapProvider = "google"
 )
 
 // NavigationParams 导航参数
@@ -36,11 +38,42 @@ func GenerateBaiduMapURL(start, end string) string {
 	// 路线模式：driving(驾车)、transit(公交)、walking(步行)、riding(骑行)
 	params.Add("mode", "transit")
 
+	// 搜索区域（使用终点作为区域，提高准确性）
+	params.Add("region", extractCityName(end))
+
 	// 必须参数
 	params.Add("output", "html")
 	params.Add("src", "webapp.qwall2.navigation")
 
 	return fmt.Sprintf("%s?%s", baseURL, params.Encode())
+}
+
+// extractCityName 从地址中提取城市名称
+// 例如："上海东方明珠" -> "上海", "北京" -> "北京"
+func extractCityName(address string) string {
+	// 常见城市列表（直辖市和主要城市）
+	cities := []string{
+		"北京", "上海", "天津", "重庆",
+		"广州", "深圳", "杭州", "成都", "西安", "南京",
+		"武汉", "苏州", "郑州", "长沙", "济南", "青岛",
+		"沈阳", "大连", "哈尔滨", "长春", "福州", "厦门",
+		"昆明", "兰州", "乌鲁木齐", "石家庄", "太原",
+	}
+
+	// 检查地址中是否包含城市名称
+	for _, city := range cities {
+		if len(address) >= len(city) && address[:len(city)] == city {
+			return city
+		}
+	}
+
+	// 如果地址较短（小于等于12字节，约4个中文字符），可能本身就是城市名
+	if len(address) <= 12 {
+		return address
+	}
+
+	// 默认返回全国
+	return "全国"
 }
 
 // GenerateAmapURL 生成高德地图导航 URL
@@ -54,6 +87,20 @@ func GenerateAmapURL(start, end string) string {
 	// 可选参数：
 	// params.Add("policy", "0") // 路线策略：0-推荐，1-避开收费，2-避开拥堵
 	// params.Add("type", "car")  // 出行方式：car-驾车，bus-公交，walk-步行
+
+	return fmt.Sprintf("%s?%s", baseURL, params.Encode())
+}
+
+// GenerateGoogleMapsURL 生成 Google Maps 导航 URL
+// 支持国际路线规划
+// URL 格式：https://www.google.com/maps/dir/?api=1&origin=起点&destination=终点&travelmode=transit
+func GenerateGoogleMapsURL(start, end string) string {
+	baseURL := "https://www.google.com/maps/dir/"
+	params := url.Values{}
+	params.Add("api", "1")
+	params.Add("origin", start)
+	params.Add("destination", end)
+	params.Add("travelmode", "transit") // transit(公交), driving(驾车), walking(步行), bicycling(骑行)
 
 	return fmt.Sprintf("%s?%s", baseURL, params.Encode())
 }
@@ -74,6 +121,8 @@ func GenerateNavigationURL(params NavigationParams) (string, error) {
 		return GenerateBaiduMapURL(params.Start, params.End), nil
 	case Amap:
 		return GenerateAmapURL(params.Start, params.End), nil
+	case Google:
+		return GenerateGoogleMapsURL(params.Start, params.End), nil
 	default:
 		return "", fmt.Errorf("不支持的地图提供商: %s", params.MapProvider)
 	}
@@ -82,8 +131,9 @@ func GenerateNavigationURL(params NavigationParams) (string, error) {
 // GetMapProviderName 获取地图提供商的友好名称
 func GetMapProviderName(provider MapProvider) string {
 	names := map[MapProvider]string{
-		Baidu: "百度地图",
-		Amap:  "高德地图",
+		Baidu:  "百度地图",
+		Amap:   "高德地图",
+		Google: "Google Maps",
 	}
 
 	if name, ok := names[provider]; ok {
@@ -94,5 +144,5 @@ func GetMapProviderName(provider MapProvider) string {
 
 // IsValidMapProvider 验证地图提供商是否有效
 func IsValidMapProvider(provider string) bool {
-	return provider == string(Baidu) || provider == string(Amap)
+	return provider == string(Baidu) || provider == string(Amap) || provider == string(Google)
 }

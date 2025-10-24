@@ -5,7 +5,7 @@
 ## ✨ 功能特性
 
 - 🗣️ **自然语言输入**：支持文字和语音输入（如："从北京到上海导航"）
-- 🗺️ **多地图支持**：兼容百度地图和高德地图
+- 🗺️ **多地图支持**：兼容百度地图、高德地图和 Google Maps（国际路线）
 - 🤖 **AI 智能解析**：自动提取起点和终点信息
 - 🔌 **MCP 协议**：标准化的工具调用接口
 - 🖥️ **跨平台**：支持 macOS、Windows、Linux
@@ -79,7 +79,7 @@ go run main.go
 **参数：**
 - `start` (string): 起点地址或地点名称
 - `end` (string): 终点地址或地点名称
-- `mapProvider` (string, 可选): 地图提供商，支持 "baidu"（百度地图）或 "amap"（高德地图），默认为 "baidu"
+- `mapProvider` (string, 可选): 地图提供商，支持 "baidu"（百度地图）、"amap"（高德地图）或 "google"（Google Maps，推荐国际路线），默认为 "baidu"
 
 **示例：**
 ```json
@@ -140,14 +140,26 @@ qwall2/
 ## 🌐 支持的地图服务
 
 ### 百度地图
-- Web 端：https://map.baidu.com
+- Web 端：http://api.map.baidu.com/direction
+- **适用场景**：中国国内路线
 - 支持起终点导航
-- URL 格式：`?origin=起点&destination=终点`
+- URL 格式：`?origin=起点&destination=终点&region=城市`
 
 ### 高德地图
 - Web 端：https://www.amap.com
+- **适用场景**：中国国内路线
 - 支持起终点导航
 - URL 格式：`/dir?from=起点&to=终点`
+
+### Google Maps
+- Web 端：https://www.google.com/maps
+- **适用场景**：国际路线、全球导航
+- 支持多种交通方式（公交、驾车、步行、骑行）
+- URL 格式：`/dir/?api=1&origin=起点&destination=终点&travelmode=transit`
+
+**使用建议：**
+- 🇨🇳 国内路线：优先选择百度或高德地图
+- 🌏 国际路线：必须使用 Google Maps（例：“使用 Google Maps 从南京到东京”）
 
 ## 🔧 环境变量配置
 
