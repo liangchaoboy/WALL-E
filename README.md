@@ -61,6 +61,9 @@ Whisper API        ChatGPT/Claude
 **1️⃣ 配置 API Key**
 ```bash
 export OPENAI_API_KEY="sk-your-openai-key"
+
+# 可选：使用第三方兼容 API（国内代理、OneAPI 等）
+export OPENAI_BASE_URL="https://your-proxy.com/v1"
 ```
 
 **2️⃣ 启动服务**
@@ -90,10 +93,17 @@ ai:
   default_provider: "chatgpt"   # 默认 AI
   chatgpt:
     model: "gpt-3.5-turbo"      # ChatGPT 模型
+    base_url: "..."             # 可自定义第三方 API
 
 map:
   default_provider: "baidu"     # 默认地图
 ```
+
+**🌐 支持第三方 API**：
+- 国内 API 代理服务
+- OneAPI 聚合服务
+- 私有部署的模型服务
+- 任何 OpenAI 兼容的 API
 
 > 📝 完整配置说明请查看 [config.yaml](config.yaml)
 

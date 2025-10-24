@@ -23,6 +23,16 @@ export OPENAI_API_KEY="sk-your-openai-key-here"
 # 可选：其他 AI 模型
 export ANTHROPIC_API_KEY="sk-ant-your-key-here"
 export DEEPSEEK_API_KEY="sk-your-key-here"
+
+# 可选：自定义 API 接口地址（支持第三方兼容服务）
+# OpenAI 兼容接口（如：国内代理、私有部署、OneAPI 等）
+export OPENAI_BASE_URL="https://your-proxy.com/v1"
+
+# Claude 兼容接口
+export ANTHROPIC_BASE_URL="https://your-claude-proxy.com/v1"
+
+# DeepSeek 兼容接口
+export DEEPSEEK_BASE_URL="https://your-deepseek-proxy.com/v1"
 ```
 
 ### 2. 启动服务
@@ -127,14 +137,23 @@ ai:
   default_provider: "chatgpt"  # 默认 AI 模型
   chatgpt:
     model: "gpt-3.5-turbo"
+    base_url: "https://api.openai.com/v1"  # 可自定义为第三方 API
   claude:
     model: "claude-3-5-sonnet-20241022"
+    base_url: "https://api.anthropic.com/v1"  # 可自定义为第三方 API
   deepseek:
     model: "deepseek-chat"
+    base_url: "https://api.deepseek.com/v1"  # 可自定义为第三方 API
 
 map:
   default_provider: "baidu"    # 默认地图服务
 ```
+
+**第三方 API 服务示例**：
+- 🇨🇳 国内 API 代理：`https://api.openai-proxy.com/v1`
+- 🔧 OneAPI 服务：`https://your-oneapi.com/v1`
+- 🏢 私有部署：`https://your-private-llm.com/v1`
+- 🌐 其他兼容服务：任何 OpenAI 兼容的 API
 
 ## 测试验证
 
