@@ -14,6 +14,8 @@ const (
 	ProviderOpenAI Provider = "openai"
 	// ProviderLocal 本地 STT（降级方案）
 	ProviderLocal Provider = "local"
+	// ProviderAliyun 阿里云实时语音识别
+	ProviderAliyun Provider = "aliyun"
 	// ProviderAuto 自动选择（优先 AI，失败后降级本地）
 	ProviderAuto Provider = "auto"
 )
@@ -44,6 +46,10 @@ type Config struct {
 	OpenAIKey string `json:"openai_key"` // OpenAI API Key
 	Model     string `json:"model"`      // 模型名称（whisper-1）
 
+	// 阿里云语音识别配置
+	AliyunAPIKey string `json:"aliyun_api_key"` // 阿里云 API Key
+	AliyunModel  string `json:"aliyun_model"`   // 阿里云模型名称
+
 	// 本地 STT 配置
 	LocalModelPath string `json:"local_model_path"` // 本地模型路径
 
@@ -58,6 +64,8 @@ func NewClient(config Config) (Client, error) {
 		return NewOpenAIClient(config)
 	case ProviderLocal:
 		return NewLocalClient(config)
+	case ProviderAliyun:
+		return NewAliyunClient(config)
 	case ProviderAuto:
 		return NewAutoClient(config)
 	default:

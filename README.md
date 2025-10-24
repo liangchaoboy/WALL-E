@@ -14,7 +14,7 @@
 - 🧠 **智能解析**：自动提取起点和终点，无需固定格式
 
 ### 🔧 技术优势
-- 🗣️ **智能 STT**：OpenAI Whisper 优先，失败自动降级到本地
+- 🗣️ **智能 STT**：阿里云语音识别、OpenAI Whisper、本地降级方案
 - 🗺️ **多地图支持**：百度、高德、Google Maps
 - 🌐 **独立部署**：Web 界面 + Go 后端，无需第三方依赖
 - 📦 **开箱即用**：一键启动，配置简单
@@ -54,29 +54,37 @@ Whisper API        ChatGPT/Claude
 ### 前置要求
 
 - Go 1.23.0+
-- OpenAI API Key（必需）
+- 至少一个 API Key（推荐阿里云语音识别）
 
 ### 三步启动
 
 **1️⃣ 配置 API Key**
 ```bash
+# 语音识别（推荐阿里云）
+export ALIYUN_API_KEY="your_aliyun_api_key"
+
+# 或者使用 OpenAI Whisper
 export OPENAI_API_KEY="sk-your-openai-key"
 
-# 可选：使用第三方兼容 API（国内代理、OneAPI 等）
-export OPENAI_BASE_URL="https://your-proxy.com/v1"
-export OPENAI_MODEL="gpt-3.5-turbo"  # 自定义模型
+# AI 服务（至少配置一个）
+export OPENAI_API_KEY="sk-your-openai-key"      # ChatGPT
+export ANTHROPIC_API_KEY="your_claude_api_key"   # Claude
+export DEEPSEEK_API_KEY="your_deepseek_api_key"  # DeepSeek
 ```
 
 **2️⃣ 启动服务**
 ```bash
 ./start.sh
+
+# 或者使用阿里云语音识别测试脚本
+./test_aliyun_stt.sh
 ```
 
 **3️⃣ 访问界面**
 
-打开浏览器：**http://localhost:8080**
+打开浏览器：**http://localhost:8090**
 
-> 💡 详细说明请查看 [QUICKSTART.md](QUICKSTART.md)
+> 💡 详细说明请查看 [docs/QUICKSTART.md](docs/QUICKSTART.md)
 
 ## ⚙️ 配置
 
@@ -112,6 +120,10 @@ map:
 - 支持所有 AI 服务（ChatGPT/Claude/DeepSeek）
 
 > 📝 完整配置说明请查看 [config.yaml](config.yaml)
+
+> 🌐 第三方 API 配置请查看 [docs/THIRD_PARTY_API.md](docs/THIRD_PARTY_API.md)
+
+> 🔧 模型参数配置请查看 [docs/MODEL_PARAMS_GUIDE.md](docs/MODEL_PARAMS_GUIDE.md)
 
 ## 📖 使用示例
 
@@ -153,7 +165,7 @@ curl -X POST http://localhost:8080/api/navigate \
   }'
 ```
 
-> 📚 完整 API 文档请查看 [ARCHITECTURE.md](ARCHITECTURE.md)
+> 📚 完整 API 文档请查看 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ## 🌟 核心优势
 
@@ -223,14 +235,25 @@ qwall2/
 | 端口被占用 | 修改 `config.yaml` 中的端口号 |
 | 语音识别失败 | 确认 API Key 和浏览器权限 |
 
-> 💡 更多帮助请查看 [QUICKSTART.md](QUICKSTART.md)
+> 💡 更多帮助请查看 [docs/QUICKSTART.md](docs/QUICKSTART.md)
 
 ## 📚 文档
 
-- [QUICKSTART.md](QUICKSTART.md) - 快速开始指南
-- [ARCHITECTURE.md](ARCHITECTURE.md) - 系统架构详解
-- [DEMO.md](DEMO.md) - 演示和测试用例
-- [STATUS.md](STATUS.md) - 项目状态报告
+### 快速开始
+- ⚡ [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - 快速参考卡（推荐）
+- 🚀 [docs/QUICKSTART.md](docs/QUICKSTART.md) - 快速开始指南
+
+### 详细文档
+- 🏛️ [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - 系统架构详解
+- 🎬 [docs/DEMO.md](docs/DEMO.md) - 演示和测试用例
+- 📊 [docs/STATUS.md](docs/STATUS.md) - 项目状态报告
+
+### 配置指南
+- 🌐 [docs/THIRD_PARTY_API.md](docs/THIRD_PARTY_API.md) - 第三方 API 配置
+- 🔧 [docs/MODEL_PARAMS_GUIDE.md](docs/MODEL_PARAMS_GUIDE.md) - 模型参数配置
+
+### 文档导航
+- 📚 [docs/DOCS.md](docs/DOCS.md) - 文档索引导航
 
 ## 🤝 贡献
 

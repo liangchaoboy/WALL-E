@@ -1,14 +1,14 @@
-# Makefile for qwall2-mcp
+# Makefile for qwall2 Web Server
 
-.PHONY: all build test clean run install help
+.PHONY: all build test clean run install help server
 
 # 默认目标
 all: build
 
-# 构建项目
+# 构建项目（Web 服务器）
 build:
-	@echo "🔨 构建 qwall2-mcp..."
-	@go build -o qwall2-mcp -ldflags="-s -w" main.go
+	@echo "🔨 构建 qwall2 Web 服务器..."
+	@go build -o qwall2-server -ldflags="-s -w" main.go
 	@echo "✅ 构建完成！"
 
 # 运行测试
@@ -23,15 +23,20 @@ coverage:
 	@go tool cover -html=coverage.out -o coverage.html
 	@echo "✅ 覆盖率报告已生成: coverage.html"
 
-# 运行程序
-run:
-	@echo "🚀 运行 qwall2-mcp..."
-	@go run main.go
+# 运行 Web 服务器
+run: build
+	@echo "🚀 启动 Web 服务器..."
+	@./qwall2-server
+
+# 使用启动脚本运行（推荐）
+server:
+	@echo "🚀 使用启动脚本运行..."
+	@./start.sh
 
 # 清理构建文件
 clean:
 	@echo "🧹 清理构建文件..."
-	@rm -f qwall2-mcp
+	@rm -f qwall2-server qwall2-mcp
 	@rm -f coverage.out coverage.html
 	@echo "✅ 清理完成！"
 
@@ -57,20 +62,21 @@ vet:
 # 安装到系统
 install: build
 	@echo "📥 安装到系统..."
-	@cp qwall2-mcp $(GOPATH)/bin/
-	@echo "✅ 安装完成！可以使用 'qwall2-mcp' 命令运行"
+	@cp qwall2-server $(GOPATH)/bin/
+	@echo "✅ 安装完成！可以使用 'qwall2-server' 命令运行"
 
 # 帮助信息
 help:
-	@echo "QWall2 MCP 服务器 - Makefile 命令"
+	@echo "QWall2 AI 地图导航系统 - Makefile 命令"
 	@echo ""
 	@echo "使用方法: make [target]"
 	@echo ""
 	@echo "可用命令:"
-	@echo "  build      - 编译项目"
+	@echo "  build      - 编译项目（生成 qwall2-server）"
 	@echo "  test       - 运行测试"
 	@echo "  coverage   - 生成测试覆盖率报告"
-	@echo "  run        - 运行程序"
+	@echo "  run        - 直接运行服务器"
+	@echo "  server     - 使用启动脚本运行（推荐）"
 	@echo "  clean      - 清理构建文件"
 	@echo "  deps       - 安装依赖"
 	@echo "  fmt        - 格式化代码"

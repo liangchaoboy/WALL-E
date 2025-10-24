@@ -1,9 +1,9 @@
 package config
-package config
 
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -24,19 +24,21 @@ type ServerConfig struct {
 
 // STTConfig STT 配置
 type STTConfig struct {
-	Provider       string `yaml:"provider"`        // auto, openai, local
+	Provider       string `yaml:"provider"` // auto, openai, local, aliyun
 	OpenAIKey      string `yaml:"openai_key"`
 	Model          string `yaml:"model"`
+	AliyunAPIKey   string `yaml:"aliyun_api_key"`
+	AliyunModel    string `yaml:"aliyun_model"`
 	EnableFallback bool   `yaml:"enable_fallback"`
 	LocalModelPath string `yaml:"local_model_path"`
 }
 
 // AIConfig AI 配置
 type AIConfig struct {
-	DefaultProvider string            `yaml:"default_provider"` // chatgpt, claude, deepseek
-	ChatGPT         AIProviderConfig  `yaml:"chatgpt"`
-	Claude          AIProviderConfig  `yaml:"claude"`
-	DeepSeek        AIProviderConfig  `yaml:"deepseek"`
+	DefaultProvider string           `yaml:"default_provider"` // chatgpt, claude, deepseek
+	ChatGPT         AIProviderConfig `yaml:"chatgpt"`
+	Claude          AIProviderConfig `yaml:"claude"`
+	DeepSeek        AIProviderConfig `yaml:"deepseek"`
 }
 
 // AIProviderConfig AI 提供商配置
@@ -79,24 +81,59 @@ func Load(path string) (*Config, error) {
 // processEnvVars 处理环境变量
 func (c *Config) processEnvVars() {
 	// STT OpenAI Key
-	if c.STT.OpenAIKey != "" && c.STT.OpenAIKey[0] == '$' {
-		c.STT.OpenAIKey = os.Getenv(c.STT.OpenAIKey[2 : len(c.STT.OpenAIKey)-1])
-	}
+	c.STT.OpenAIKey = expandEnvVar(c.STT.OpenAIKey)
+	c.STT.Model = expandEnvVar(c.STT.Model)
+
+	// STT 阿里云配置
+	c.STT.AliyunAPIKey = expandEnvVar(c.STT.AliyunAPIKey)
+	c.STT.AliyunModel = expandEnvVar(c.STT.AliyunModel)
 
 	// AI ChatGPT
-	if c.AI.ChatGPT.APIKey != "" && c.AI.ChatGPT.APIKey[0] == '$' {
-		c.AI.ChatGPT.APIKey = os.Getenv(c.AI.ChatGPT.APIKey[2 : len(c.AI.ChatGPT.APIKey)-1])
-	}
+	c.AI.ChatGPT.APIKey = expandEnvVar(c.AI.ChatGPT.APIKey)
+	c.AI.ChatGPT.Model = expandEnvVar(c.AI.ChatGPT.Model)
+	c.AI.ChatGPT.BaseURL = expandEnvVar(c.AI.ChatGPT.BaseURL)
 
 	// AI Claude
-	if c.AI.Claude.APIKey != "" && c.AI.Claude.APIKey[0] == '$' {
-		c.AI.Claude.APIKey = os.Getenv(c.AI.Claude.APIKey[2 : len(c.AI.Claude.APIKey)-1])
-	}
+	c.AI.Claude.APIKey = expandEnvVar(c.AI.Claude.APIKey)
+	c.AI.Claude.Model = expandEnvVar(c.AI.Claude.Model)
+	c.AI.Claude.BaseURL = expandEnvVar(c.AI.Claude.BaseURL)
 
 	// AI DeepSeek
-	if c.AI.DeepSeek.APIKey != "" && c.AI.DeepSeek.APIKey[0] == '$' {
-		c.AI.DeepSeek.APIKey = os.Getenv(c.AI.DeepSeek.APIKey[2 : len(c.AI.DeepSeek.APIKey)-1])
+	c.AI.DeepSeek.APIKey = expandEnvVar(c.AI.DeepSeek.APIKey)
+	c.AI.DeepSeek.Model = expandEnvVar(c.AI.DeepSeek.Model)
+	c.AI.DeepSeek.BaseURL = expandEnvVar(c.AI.DeepSeek.BaseURL)
+}
+
+// expandEnvVar 展开环境变量，支持 ${VAR:-default} 语法
+func expandEnvVar(value string) string {
+	if value == "" {
+		return value
 	}
+
+	// 检查是否是环境变量格式 ${VAR} 或 ${VAR:-default}
+	if !strings.HasPrefix(value, "${") || !strings.HasSuffix(value, "}") {
+		return value
+	}
+
+	// 移除 ${ 和 }
+	content := value[2 : len(value)-1]
+
+	// 检查是否有默认值语法 ${VAR:-default}
+	if strings.Contains(content, ":-") {
+		parts := strings.SplitN(content, ":-", 2)
+		if len(parts) == 2 {
+			envVar := parts[0]
+			defaultValue := parts[1]
+
+			if envValue := os.Getenv(envVar); envValue != "" {
+				return envValue
+			}
+			return defaultValue
+		}
+	}
+
+	// 简单格式 ${VAR}
+	return os.Getenv(content)
 }
 
 // Validate 验证配置

@@ -3,6 +3,11 @@ let mediaRecorder;
 let audioChunks = [];
 let isRecording = false;
 
+// Chrome Web Speech API 状态
+let recognition;
+let isListening = false;
+let speechText = '';
+
 // DOM 元素
 const tabs = document.querySelectorAll('.tab');
 const tabContents = document.querySelectorAll('.tab-content');
@@ -24,6 +29,7 @@ let currentInputType = 'text';
 document.addEventListener('DOMContentLoaded', () => {
     initTabs();
     initRecording();
+    initSpeechRecognition();
     initSubmit();
 });
 
@@ -52,12 +58,153 @@ function initRecording() {
     recordBtn.addEventListener('click', toggleRecording);
 }
 
+// 初始化语音识别
+function initSpeechRecognition() {
+    // 检查浏览器是否支持 Web Speech API
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        
+        // 配置语音识别
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'zh-CN'; // 设置为中文
+        
+        // 识别开始
+        recognition.onstart = () => {
+            console.log('语音识别开始');
+            isListening = true;
+            updateVoiceUI();
+        };
+        
+        // 识别结果
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            let finalTranscript = '';
+            
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript;
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+            
+            // 更新显示的文本
+            speechText = finalTranscript || interimTranscript;
+            updateSpeechDisplay(speechText, !finalTranscript);
+        };
+        
+        // 识别结束
+        recognition.onend = () => {
+            console.log('语音识别结束');
+            isListening = false;
+            updateVoiceUI();
+        };
+        
+        // 识别错误
+        recognition.onerror = (event) => {
+            console.error('语音识别错误:', event.error);
+            isListening = false;
+            updateVoiceUI();
+            
+            let errorMessage = '语音识别失败';
+            switch (event.error) {
+                case 'no-speech':
+                    errorMessage = '未检测到语音，请重试';
+                    break;
+                case 'audio-capture':
+                    errorMessage = '无法访问麦克风';
+                    break;
+                case 'not-allowed':
+                    errorMessage = '麦克风权限被拒绝';
+                    break;
+                case 'network':
+                    errorMessage = '网络连接错误';
+                    break;
+            }
+            showError(errorMessage);
+        };
+        
+    } else {
+        console.warn('浏览器不支持 Web Speech API');
+        // 如果浏览器不支持，隐藏语音输入选项
+        const voiceTab = document.querySelector('[data-tab="voice"]');
+        if (voiceTab) {
+            voiceTab.style.display = 'none';
+        }
+    }
+}
+
 // 切换录音状态
 async function toggleRecording() {
-    if (!isRecording) {
-        await startRecording();
+    if (!isListening) {
+        startSpeechRecognition();
     } else {
-        stopRecording();
+        stopSpeechRecognition();
+    }
+}
+
+// 开始语音识别
+function startSpeechRecognition() {
+    if (recognition && !isListening) {
+        speechText = '';
+        recognition.start();
+    }
+}
+
+// 停止语音识别
+function stopSpeechRecognition() {
+    if (recognition && isListening) {
+        recognition.stop();
+    }
+}
+
+// 更新语音UI状态
+function updateVoiceUI() {
+    if (isListening) {
+        recordBtn.classList.add('recording');
+        recordBtn.querySelector('.text').textContent = '点击停止识别';
+        recordingStatus.classList.remove('hidden');
+        recordingStatus.querySelector('span:last-child').textContent = '语音识别中...';
+    } else {
+        recordBtn.classList.remove('recording');
+        recordBtn.querySelector('.text').textContent = '点击开始识别';
+        recordingStatus.classList.add('hidden');
+    }
+}
+
+// 更新语音识别显示
+function updateSpeechDisplay(text, isInterim = false) {
+    const voiceTab = document.getElementById('voice-tab');
+    let displayArea = voiceTab.querySelector('.speech-display');
+    
+    if (!displayArea) {
+        displayArea = document.createElement('div');
+        displayArea.className = 'speech-display';
+        displayArea.style.cssText = `
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            min-height: 50px;
+            font-size: 16px;
+            line-height: 1.5;
+        `;
+        voiceTab.appendChild(displayArea);
+    }
+    
+    if (text) {
+        displayArea.innerHTML = `
+            <div style="color: #6c757d; font-size: 14px; margin-bottom: 5px;">
+                ${isInterim ? '🔊 正在识别...' : '✅ 识别完成'}
+            </div>
+            <div style="color: #333;">${text}</div>
+        `;
+    } else {
+        displayArea.innerHTML = '<div style="color: #6c757d;">等待语音输入...</div>';
     }
 }
 
@@ -165,7 +312,17 @@ async function handleSubmit() {
             input: text
         });
     } else {
-        showError('请点击麦克风按钮开始录音');
+        // 语音输入模式
+        if (!speechText.trim()) {
+            showError('请先进行语音识别');
+            return;
+        }
+        
+        await submitNavigate({
+            type: 'text',
+            input: speechText.trim(),
+            source: 'speech'
+        });
     }
 }
 
@@ -233,6 +390,7 @@ function showSuccess(data) {
             <p class="result-info"><strong>终点：</strong>${data.end}</p>
             <p class="result-info"><strong>地图：</strong>${getMapName(data.map_provider)}</p>
             ${data.stt_provider ? `<p class="result-info"><strong>语音识别：</strong>${data.stt_provider}</p>` : ''}
+            ${data.source === 'speech' ? `<p class="result-info"><strong>输入方式：</strong>Chrome 语音识别</p>` : ''}
             <p class="result-info"><strong>AI 模型：</strong>${data.ai_provider}</p>
             <p class="result-info"><strong>导航 URL：</strong><a href="${data.url}" target="_blank">点击打开</a></p>
             <p style="margin-top: 15px; color: #28a745;">
@@ -247,13 +405,22 @@ function showSuccess(data) {
 
 // 显示错误
 function showError(message, errorType = 'unknown') {
+    let suggestion = "💡 请检查输入并重试";
+    
+    // 为特定错误类型提供更好的建议
+    if (errorType === 'stt_unavailable') {
+        suggestion = "💡 请切换到文字输入模式，或配置 OpenAI API Key 启用语音识别";
+    } else if (errorType === 'stt_failed') {
+        suggestion = "💡 请检查麦克风权限，或尝试使用文字输入";
+    }
+    
     const html = `
         <div class="result-error">
             <h4>❌ 错误</h4>
             <p class="result-info"><strong>错误类型：</strong>${getErrorTypeName(errorType)}</p>
             <p class="result-info"><strong>详情：</strong>${message}</p>
             <p style="margin-top: 15px; color: #dc3545;">
-                💡 请检查输入并重试
+                ${suggestion}
             </p>
         </div>
     `;
@@ -277,6 +444,7 @@ function getErrorTypeName(errorType) {
     const names = {
         'invalid_request': '无效请求',
         'stt_failed': '语音识别失败',
+        'stt_unavailable': '语音识别服务不可用',
         'ai_not_available': 'AI 服务不可用',
         'extraction_failed': '提取导航信息失败',
         'no_location': '未识别到地点',

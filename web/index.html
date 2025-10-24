@@ -35,12 +35,17 @@
                     <div class="voice-controls">
                         <button id="recordBtn" class="voice-btn">
                             <span class="mic-icon">🎤</span>
-                            <span class="text">点击开始录音</span>
+                            <span class="text">点击开始识别</span>
                         </button>
                         <p class="voice-hint">说话示例："从北京到上海"</p>
                         <div id="recordingStatus" class="recording-status hidden">
                             <span class="pulse"></span>
-                            <span>录音中...</span>
+                            <span>语音识别中...</span>
+                        </div>
+                        <div class="speech-info">
+                            <p style="font-size: 14px; color: #6c757d; margin-top: 10px;">
+                                💡 使用Chrome浏览器内置语音识别，无需上传音频文件
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -50,9 +55,10 @@
                     <div class="option-group">
                         <label>AI 模型：</label>
                         <select id="aiProvider">
-                            <option value="">默认 (ChatGPT)</option>
-                            <option value="chatgpt">ChatGPT</option>
+                            <option value="">默认 (Mock)</option>
+                            <option value="mock">Mock (测试模式)</option>
                             <option value="claude">Claude</option>
+                            <option value="chatgpt">ChatGPT</option>
                             <option value="deepseek">DeepSeek</option>
                         </select>
                     </div>
