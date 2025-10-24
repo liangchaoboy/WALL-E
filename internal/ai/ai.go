@@ -3,6 +3,7 @@ package ai
 import (
 	"context"
 	"fmt"
+	"strings"
 )
 
 // Provider 定义 AI 提供商类型
@@ -49,4 +50,35 @@ func NewClient(config Config) (Client, error) {
 	default:
 		return nil, fmt.Errorf("不支持的 AI 提供商: %s", config.Provider)
 	}
+}
+
+// CleanJSONContent 清理 AI 返回的内容，移除 Markdown 格式
+func CleanJSONContent(content string) string {
+	// 移除 ```json 和 ``` 标记
+	content = strings.TrimSpace(content)
+
+	// 处理 ```json ... ``` 格式
+	if strings.HasPrefix(content, "```json") {
+		content = strings.TrimPrefix(content, "```json")
+		content = strings.TrimSuffix(content, "```")
+		content = strings.TrimSpace(content)
+	}
+
+	// 处理 ``` ... ``` 格式
+	if strings.HasPrefix(content, "```") {
+		content = strings.TrimPrefix(content, "```")
+		content = strings.TrimSuffix(content, "```")
+		content = strings.TrimSpace(content)
+	}
+
+	// 移除可能的其他前缀
+	prefixes := []string{"json", "JSON", "```json", "```"}
+	for _, prefix := range prefixes {
+		if strings.HasPrefix(content, prefix) {
+			content = strings.TrimPrefix(content, prefix)
+			content = strings.TrimSpace(content)
+		}
+	}
+
+	return content
 }

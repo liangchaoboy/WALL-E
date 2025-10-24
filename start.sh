@@ -27,6 +27,13 @@ check_env() {
     else
         echo "✅ DeepSeek API Key 已配置"
     fi
+    
+    if [ -z "$ALIYUN_API_KEY" ]; then
+        echo "⚠️  警告: ALIYUN_API_KEY 未设置"
+        echo "   阿里云语音识别功能将不可用"
+    else
+        echo "✅ 阿里云 API Key 已配置"
+    fi
     echo ""
 }
 

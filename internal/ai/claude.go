@@ -116,6 +116,9 @@ func (c *ClaudeClient) ExtractNavigationIntent(ctx context.Context, text string)
 	// 提取文本内容
 	content := strings.TrimSpace(result.Content[0].Text)
 
+	// 清理内容，移除 Markdown 代码块格式
+	content = CleanJSONContent(content)
+
 	// 尝试解析 JSON
 	var intent NavigationIntent
 	if err := json.Unmarshal([]byte(content), &intent); err != nil {

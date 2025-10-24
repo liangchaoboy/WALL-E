@@ -14,7 +14,7 @@
 - 🧠 **智能解析**：自动提取起点和终点，无需固定格式
 
 ### 🔧 技术优势
-- 🗣️ **智能 STT**：OpenAI Whisper 优先，失败自动降级到本地
+- 🗣️ **智能 STT**：阿里云语音识别、OpenAI Whisper、本地降级方案
 - 🗺️ **多地图支持**：百度、高德、Google Maps
 - 🌐 **独立部署**：Web 界面 + Go 后端，无需第三方依赖
 - 📦 **开箱即用**：一键启动，配置简单
@@ -54,27 +54,35 @@ Whisper API        ChatGPT/Claude
 ### 前置要求
 
 - Go 1.23.0+
-- OpenAI API Key（必需）
+- 至少一个 API Key（推荐阿里云语音识别）
 
 ### 三步启动
 
 **1️⃣ 配置 API Key**
 ```bash
+# 语音识别（推荐阿里云）
+export ALIYUN_API_KEY="your_aliyun_api_key"
+
+# 或者使用 OpenAI Whisper
 export OPENAI_API_KEY="sk-your-openai-key"
 
-# 可选：使用第三方兼容 API（国内代理、OneAPI 等）
-export OPENAI_BASE_URL="https://your-proxy.com/v1"
-export OPENAI_MODEL="gpt-3.5-turbo"  # 自定义模型
+# AI 服务（至少配置一个）
+export OPENAI_API_KEY="sk-your-openai-key"      # ChatGPT
+export ANTHROPIC_API_KEY="your_claude_api_key"   # Claude
+export DEEPSEEK_API_KEY="your_deepseek_api_key"  # DeepSeek
 ```
 
 **2️⃣ 启动服务**
 ```bash
 ./start.sh
+
+# 或者使用阿里云语音识别测试脚本
+./test_aliyun_stt.sh
 ```
 
 **3️⃣ 访问界面**
 
-打开浏览器：**http://localhost:8080**
+打开浏览器：**http://localhost:8090**
 
 > 💡 详细说明请查看 [docs/QUICKSTART.md](docs/QUICKSTART.md)
 

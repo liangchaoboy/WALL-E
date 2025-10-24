@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -50,21 +51,62 @@ func New(cfg *config.Config) (*Server, error) {
 
 // initSTT 初始化 STT 客户端
 func (s *Server) initSTT() error {
+	// 优先使用阿里云语音识别
+	if s.config.STT.AliyunAPIKey != "" {
+		log.Printf("🎤 使用阿里云语音识别")
+		sttConfig := stt.Config{
+			Provider:     stt.ProviderAliyun,
+			AliyunAPIKey: s.config.STT.AliyunAPIKey,
+			AliyunModel:  s.config.STT.AliyunModel,
+		}
+
+		client, err := stt.NewClient(sttConfig)
+		if err != nil {
+			log.Printf("⚠️  阿里云 STT 初始化失败: %v", err)
+			// 继续尝试其他方案
+		} else {
+			s.sttClient = client
+			log.Printf("✅ 阿里云 STT 客户端初始化成功: %s", client.GetProviderName())
+			return nil
+		}
+	}
+
+	// 如果没有阿里云 Key，尝试 OpenAI
+	if s.config.STT.OpenAIKey != "" {
+		log.Printf("🎤 使用 OpenAI Whisper")
+		sttConfig := stt.Config{
+			Provider:  stt.ProviderOpenAI,
+			OpenAIKey: s.config.STT.OpenAIKey,
+			Model:     s.config.STT.Model,
+		}
+
+		client, err := stt.NewClient(sttConfig)
+		if err != nil {
+			log.Printf("⚠️  OpenAI STT 初始化失败: %v", err)
+			// 继续尝试其他方案
+		} else {
+			s.sttClient = client
+			log.Printf("✅ OpenAI STT 客户端初始化成功: %s", client.GetProviderName())
+			return nil
+		}
+	}
+
+	// 最后使用本地降级模式
+	log.Printf("⚠️  没有可用的在线 STT 服务，使用本地 STT 模式")
 	sttConfig := stt.Config{
-		Provider:       stt.Provider(s.config.STT.Provider),
-		OpenAIKey:      s.config.STT.OpenAIKey,
-		Model:          s.config.STT.Model,
-		EnableFallback: s.config.STT.EnableFallback,
+		Provider:       stt.ProviderLocal,
+		EnableFallback: false,
 		LocalModelPath: s.config.STT.LocalModelPath,
 	}
 
 	client, err := stt.NewClient(sttConfig)
 	if err != nil {
+		log.Printf("⚠️  本地 STT 初始化失败: %v", err)
 		return err
 	}
 
 	s.sttClient = client
-	log.Printf("✅ STT 客户端初始化成功: %s", client.GetProviderName())
+	log.Printf("✅ 本地 STT 客户端初始化成功: %s", client.GetProviderName())
 	return nil
 }
 
@@ -119,7 +161,9 @@ func (s *Server) initAI() error {
 	}
 
 	if len(s.aiClients) == 0 {
-		return fmt.Errorf("没有可用的 AI 客户端")
+		log.Printf("⚠️  没有可用的 AI 客户端，将使用模拟模式")
+		// 创建一个模拟的 AI 客户端用于测试
+		s.aiClients["mock"] = &mockAIClient{}
 	}
 
 	return nil
@@ -227,6 +271,13 @@ func (s *Server) handleNavigate(w http.ResponseWriter, r *http.Request) {
 		}
 		text = result.Text
 		sttProvider = string(result.Provider)
+
+		// 检查是否是语音识别服务不可用的提示
+		if strings.Contains(text, "语音识别服务暂时不可用") {
+			s.sendError(w, "stt_unavailable", "语音识别服务暂时不可用，请使用文字输入功能")
+			return
+		}
+
 		log.Printf("🎤 STT 结果: %s (提供商: %s)", text, sttProvider)
 	} else {
 		text = req.Input
@@ -349,4 +400,50 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.ServeFile(w, r, "web/index.html")
+}
+
+// emptySTTClient 空的 STT 客户端实现
+type emptySTTClient struct{}
+
+func (c *emptySTTClient) TranscribeAudio(ctx context.Context, audio io.Reader, format string) (*stt.Result, error) {
+	return nil, fmt.Errorf("STT 功能不可用：请配置 OpenAI API Key")
+}
+
+func (c *emptySTTClient) GetProviderName() string {
+	return "Empty (需要配置 API Key)"
+}
+
+// mockAIClient 模拟 AI 客户端实现
+type mockAIClient struct{}
+
+func (c *mockAIClient) ExtractNavigationIntent(ctx context.Context, text string) (*ai.NavigationIntent, error) {
+	// 简单的模拟逻辑，用于测试
+	if strings.Contains(text, "到") || strings.Contains(text, "去") {
+		parts := strings.Split(text, "到")
+		if len(parts) == 2 {
+			return &ai.NavigationIntent{
+				Start: strings.TrimSpace(parts[0]),
+				End:   strings.TrimSpace(parts[1]),
+			}, nil
+		}
+
+		// 尝试 "去" 分割
+		parts = strings.Split(text, "去")
+		if len(parts) == 2 {
+			return &ai.NavigationIntent{
+				Start: "当前位置",
+				End:   strings.TrimSpace(parts[1]),
+			}, nil
+		}
+	}
+
+	// 如果无法解析，返回默认值
+	return &ai.NavigationIntent{
+		Start: "当前位置",
+		End:   text,
+	}, nil
+}
+
+func (c *mockAIClient) GetProviderName() string {
+	return "Mock (测试模式)"
 }

@@ -116,6 +116,9 @@ func (c *DeepSeekClient) ExtractNavigationIntent(ctx context.Context, text strin
 	// 提取 JSON
 	content := strings.TrimSpace(result.Choices[0].Message.Content)
 
+	// 清理内容，移除 Markdown 代码块格式
+	content = CleanJSONContent(content)
+
 	// 尝试解析 JSON
 	var intent NavigationIntent
 	if err := json.Unmarshal([]byte(content), &intent); err != nil {
