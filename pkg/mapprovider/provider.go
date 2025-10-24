@@ -23,16 +23,22 @@ type NavigationParams struct {
 }
 
 // GenerateBaiduMapURL 生成百度地图导航 URL
-// Web 端导航 URL 格式：
-// https://map.baidu.com/?da_src=shareurl&origin=起点&destination=终点&output=html
+// Web 端路线规划 URL 格式（官方 API）：
+// http://api.map.baidu.com/direction?origin=起点&destination=终点&mode=driving&region=城市&output=html&src=webapp
 func GenerateBaiduMapURL(start, end string) string {
-	baseURL := "https://map.baidu.com/"
+	baseURL := "http://api.map.baidu.com/direction"
 	params := url.Values{}
-	params.Add("da_src", "shareurl")
+
+	// 起点和终点（支持地名）
 	params.Add("origin", start)
 	params.Add("destination", end)
+
+	// 路线模式：driving(驾车)、transit(公交)、walking(步行)、riding(骑行)
+	params.Add("mode", "transit")
+
+	// 必须参数
 	params.Add("output", "html")
-	params.Add("da_mode", "transit") // 可选: driving, transit, walking, riding
+	params.Add("src", "webapp.qwall2.navigation")
 
 	return fmt.Sprintf("%s?%s", baseURL, params.Encode())
 }

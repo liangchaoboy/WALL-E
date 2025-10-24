@@ -12,8 +12,8 @@ func TestGenerateBaiduMapURL(t *testing.T) {
 	url := GenerateBaiduMapURL(start, end)
 
 	// 检查基础 URL
-	if !strings.HasPrefix(url, "https://map.baidu.com/") {
-		t.Errorf("URL 应该以 https://map.baidu.com/ 开头")
+	if !strings.HasPrefix(url, "http://api.map.baidu.com/direction") {
+		t.Errorf("URL 应该以 http://api.map.baidu.com/direction 开头，实际得到: %s", url)
 	}
 
 	// 检查必要参数
@@ -25,8 +25,12 @@ func TestGenerateBaiduMapURL(t *testing.T) {
 		t.Error("URL 应该包含 destination 参数")
 	}
 
-	if !strings.Contains(url, "da_src=shareurl") {
-		t.Error("URL 应该包含 da_src=shareurl 参数")
+	if !strings.Contains(url, "mode=") {
+		t.Error("URL 应该包含 mode 参数")
+	}
+
+	if !strings.Contains(url, "src=") {
+		t.Error("URL 应该包含 src 参数")
 	}
 }
 
@@ -66,7 +70,7 @@ func TestGenerateNavigationURL(t *testing.T) {
 				MapProvider: Baidu,
 			},
 			shouldError: false,
-			urlPrefix:   "https://map.baidu.com/",
+			urlPrefix:   "http://api.map.baidu.com/direction",
 		},
 		{
 			name: "高德地图",
@@ -85,7 +89,7 @@ func TestGenerateNavigationURL(t *testing.T) {
 				End:   "上海",
 			},
 			shouldError: false,
-			urlPrefix:   "https://map.baidu.com/",
+			urlPrefix:   "http://api.map.baidu.com/direction",
 		},
 		{
 			name: "起点为空",
