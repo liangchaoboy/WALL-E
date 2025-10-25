@@ -1,269 +1,135 @@
-# 🚀 qwall2 - AI 智能地图导航系统
+# WALL-E: AI 驱动的桌面操作系统代理
 
-> 基于 Go + AI 的智能地图导航系统，支持文字和语音输入，自动解析并打开地图导航。
-
-[![Go Version](https://img.shields.io/badge/Go-1.23.0-blue.svg)](https://golang.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Production-success.svg)](STATUS.md)
-
-## ✨ 核心特性
-
-### 🎯 智能交互
-- 🎤 **双模输入**：文字输入 + 语音录制
-- 🤖 **多 AI 引擎**：ChatGPT、Claude、DeepSeek 自由切换
-- 🧠 **智能解析**：自动提取起点和终点，无需固定格式
-
-### 🔧 技术优势
-- 🗣️ **智能 STT**：阿里云语音识别、OpenAI Whisper、本地降级方案
-- 🗺️ **多地图支持**：百度、高德、Google Maps
-- 🌐 **独立部署**：Web 界面 + Go 后端，无需第三方依赖
-- 📦 **开箱即用**：一键启动，配置简单
-
-## 🏗️ 系统架构
-
-```
-┌─────────────────────────────────────┐
-│      Web 前端 (浏览器)               │
-│   文字输入  |  语音录制               │
-└──────────────┬──────────────────────┘
-               ↓ HTTP POST /api/navigate
-┌──────────────────────────────────────┐
-│     Go HTTP 服务器 (:8080)            │
-└──────────────┬───────────────────────┘
-               ↓
-    ┌──────────┴──────────┐
-    ↓                     ↓
-┌─────────┐         ┌──────────┐
-│ STT 模块 │         │ AI 模块   │
-│ (语音)   │         │ (意图提取) │
-└─────────┘         └──────────┘
-    ↓                     ↓
-Whisper API        ChatGPT/Claude
-    ↓                     ↓
-本地降级           DeepSeek
-    └──────────┬──────────┘
-               ↓
-         地图 URL 生成
-      (百度/高德/Google)
-               ↓
-         返回前端 → 跳转
-```
-
-## 🚀 快速开始
-
-### 前置要求
-
-- Go 1.23.0+
-- 至少一个 API Key（推荐阿里云语音识别）
-
-### 三步启动
-
-**1️⃣ 配置 API Key**
-```bash
-# 语音识别（推荐阿里云）
-export ALIYUN_API_KEY="your_aliyun_api_key"
-
-# 或者使用 OpenAI Whisper
-export OPENAI_API_KEY="sk-your-openai-key"
-
-# AI 服务（至少配置一个）
-export OPENAI_API_KEY="sk-your-openai-key"      # ChatGPT
-export ANTHROPIC_API_KEY="your_claude_api_key"   # Claude
-export DEEPSEEK_API_KEY="your_deepseek_api_key"  # DeepSeek
-```
-
-**2️⃣ 启动服务**
-```bash
-./start.sh
-
-# 或者使用阿里云语音识别测试脚本
-./test_aliyun_stt.sh
-```
-
-**3️⃣ 访问界面**
-
-打开浏览器：**http://localhost:8090**
-
-> 💡 详细说明请查看 [docs/QUICKSTART.md](docs/QUICKSTART.md)
-
-## ⚙️ 配置
-
-编辑 `config.yaml`：
-
-```yaml
-server:
-  port: 8080                    # 服务端口
-
-stt:
-  provider: "auto"              # STT 提供商
-  enable_fallback: true         # 启用降级
-
-ai:
-  default_provider: "chatgpt"   # 默认 AI
-  chatgpt:
-    model: "gpt-3.5-turbo"      # 模型名称（可环境变量覆盖）
-    base_url: "..."             # API 地址（可自定义）
-
-map:
-  default_provider: "baidu"     # 默认地图
-```
-
-**🌐 支持第三方 API**：
-- 国内 API 代理服务
-- OneAPI 聚合服务
-- 私有部署的模型服务
-- 任何 OpenAI 兼容的 API
-
-**🔧 环境变量覆盖**：
-- `OPENAI_MODEL` - 自定义模型名称
-- `OPENAI_BASE_URL` - 自定义 API 地址
-- 支持所有 AI 服务（ChatGPT/Claude/DeepSeek）
-
-> 📝 完整配置说明请查看 [config.yaml](config.yaml)
-
-> 🌐 第三方 API 配置请查看 [docs/THIRD_PARTY_API.md](docs/THIRD_PARTY_API.md)
-
-> 🔧 模型参数配置请查看 [docs/MODEL_PARAMS_GUIDE.md](docs/MODEL_PARAMS_GUIDE.md)
-
-## 📖 使用示例
-
-### 文字输入
-
-```
-输入："从北京去上海"
-结果：起点=北京，终点=上海 → 打开地图
-
-输入："去天安门"
-结果：起点=当前位置，终点=天安门 → 打开地图
-```
-
-### 语音输入
-
-```
-1. 点击"开始录音"
-2. 说出："从西湖到灵隐寺"
-3. 点击"停止录音"
-4. 自动识别并导航
-```
-
-## 🔌 API 接口
-
-| 接口 | 方法 | 说明 |
-|------|------|------|
-| `/api/navigate` | POST | 导航请求 |
-| `/api/health` | GET | 健康检查 |
-
-**导航请求示例**：
-```bash
-curl -X POST http://localhost:8080/api/navigate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "type": "text",
-    "input": "从北京去上海",
-    "ai_provider": "chatgpt",
-    "map_provider": "baidu"
-  }'
-```
-
-> 📚 完整 API 文档请查看 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-
-## 🌟 核心优势
-
-### 智能降级机制
-
-```
-OpenAI Whisper API (优先)
-    ↓ 失败
-whisper.cpp (本地)
-    ↓ 失败
-vosk (轻量级)
-    ↓ 失败
-友好提示
-```
-
-### 多 AI 引擎
-
-| AI 模型 | 特点 | 推荐场景 |
-|---------|------|----------|
-| ChatGPT | 快速经济 | 日常使用 |
-| Claude | 智能准确 | 复杂场景 |
-| DeepSeek | 中文优化 | 国内用户 |
-
-### 自然语言理解
-
-- ✅ 自动提取起点终点
-- ✅ 支持口语化表达
-- ✅ 智能默认当前位置
-
-## 📁 项目结构
-
-```
-qwall2/
-├── internal/              # 核心模块
-│   ├── ai/               # AI 处理（ChatGPT/Claude/DeepSeek）
-│   ├── stt/              # STT（Whisper + 本地降级）
-│   ├── server/           # HTTP 服务器
-│   └── config/           # 配置管理
-├── pkg/
-│   └── mapprovider/      # 地图服务（百度/高德/Google）
-├── web/                  # Web 前端
-│   ├── index.html
-│   └── static/
-├── main.go               # 程序入口
-└── config.yaml           # 配置文件
-```
-
-## 🧪 测试
-
-运行自动化测试：
-
-```bash
-./test.sh
-```
-
-测试覆盖：
-- ✅ 服务器运行
-- ✅ API 端点
-- ✅ 静态文件
-- ✅ 健康检查
-
-## 🐛 故障排查
-
-| 问题 | 解决方案 |
-|------|----------|
-| API Key 无效 | 检查并重新设置 `OPENAI_API_KEY` |
-| 端口被占用 | 修改 `config.yaml` 中的端口号 |
-| 语音识别失败 | 确认 API Key 和浏览器权限 |
-
-> 💡 更多帮助请查看 [docs/QUICKSTART.md](docs/QUICKSTART.md)
-
-## 📚 文档
-
-### 快速开始
-- ⚡ [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - 快速参考卡（推荐）
-- 🚀 [docs/QUICKSTART.md](docs/QUICKSTART.md) - 快速开始指南
-
-### 详细文档
-- 🏛️ [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - 系统架构详解
-- 🎬 [docs/DEMO.md](docs/DEMO.md) - 演示和测试用例
-- 📊 [docs/STATUS.md](docs/STATUS.md) - 项目状态报告
-
-### 配置指南
-- 🌐 [docs/THIRD_PARTY_API.md](docs/THIRD_PARTY_API.md) - 第三方 API 配置
-- 🔧 [docs/MODEL_PARAMS_GUIDE.md](docs/MODEL_PARAMS_GUIDE.md) - 模型参数配置
-
-### 文档导航
-- 📚 [docs/DOCS.md](docs/DOCS.md) - 文档索引导航
-
-## 🤝 贡献
-
-欢迎提交 Issue 和 Pull Request！
-
-## 📄 许可证
-
-MIT License
+> 让 AI 操作你的电脑 - 基于 MCP 协议的智能桌面助手
 
 ---
 
-**快速开始**: `export OPENAI_API_KEY="sk-..." && ./start.sh`  
-**访问地址**: http://localhost:8080
+## 📚 项目文档
+
+本项目正在进行全面重构，聚焦于构建一个 AI 驱动的桌面操作系统代理。
+
+**完整的产品需求文档 (PRD) 请查看：[PRD.md](./PRD.md)**
+
+---
+
+## 🎯 项目愿景
+
+打造一个智能的桌面操作代理系统，让用户通过自然语言（文字/语音）与计算机交互，实现各类日常操作的自动化。
+
+### 核心特性
+
+- 🎤 **语音控制**：通过"小七小七"唤醒词，语音控制电脑
+- ⌨️ **文字输入**：桌面输入界面，支持快捷键唤醒
+- 🧠 **智能理解**：基于 AI 的自然语言理解，无需记忆命令
+- 🔌 **可扩展**：基于 MCP (Model Context Protocol) 插件化架构
+- 🗺️ **多场景支持**：地图导航、天气查询、音乐播放、系统控制等
+
+---
+
+## 🚀 快速开始
+
+### 核心用例
+
+#### 场景 1：地图导航
+```
+用户："小七小七，打开地图导航，从上海七牛云到虹桥机场"
+系统：自动打开地图应用并进入导航状态
+```
+
+#### 场景 2：天气查询
+```
+用户："小七小七，查看明天上海的天气"
+系统：展示上海明天的天气信息
+```
+
+#### 场景 3：音乐播放
+```
+用户："小七小七，播放周杰伦的晴天"
+系统：打开音乐应用并播放指定歌曲
+```
+
+#### 场景 4：系统控制
+```
+用户："小七小七，音量调到50%"
+系统：调整系统音量到50%
+```
+
+---
+
+## 🏗️ 技术架构
+
+### 核心技术栈
+
+- **客户端**：Swift + SwiftUI (macOS 原生)
+- **后端服务**：Go
+- **AI 引擎**：ChatGPT / Claude / DeepSeek
+- **语音识别**：阿里云 / OpenAI Whisper / 本地模型
+- **工具协议**：MCP (Model Context Protocol)
+
+### 系统架构
+
+```
+用户交互层 (语音/文字)
+    ↓
+核心处理层 (STT → AI理解 → MCP Client)
+    ↓
+MCP工具层 (地图/天气/音乐/浏览器/系统控制)
+    ↓
+系统能力层 (macOS API / 第三方服务)
+```
+
+---
+
+## 📅 开发计划
+
+项目采用分阶段实施策略，总计 12 周完成：
+
+- **阶段一 (4周)**：MVP - 基础导航功能
+- **阶段二 (3周)**：功能扩展 - 天气、音乐、应用控制
+- **阶段三 (3周)**：高级能力 - 浏览器控制、系统控制
+- **阶段四 (2周)**：优化与发布
+
+详细计划请查看 [PRD.md](./PRD.md)
+
+---
+
+## 📖 文档导航
+
+- **[PRD.md](./PRD.md)** - 完整的产品需求文档
+  - 产品概述与愿景
+  - 用户故事与场景
+  - 功能需求详解
+  - 技术架构设计
+  - 实施计划与测试策略
+  - 安全与隐私
+  - 风险与挑战
+
+---
+
+## 🤝 参与贡献
+
+本项目正在积极开发中，欢迎参与贡献！
+
+### 参与方式
+
+1. 查看 [Issue #16](../../issues/16) 了解项目重构进展
+2. 阅读 [PRD.md](./PRD.md) 了解详细需求
+3. 提交 Issue 报告问题或建议
+4. 提交 PR 贡献代码
+
+---
+
+## 📞 联系方式
+
+- **Issue 讨论**：[GitHub Issues](../../issues)
+- **项目主页**：[liangchaoboy/WALL-E](https://github.com/liangchaoboy/WALL-E)
+
+---
+
+## 📄 许可证
+
+待定
+
+---
+
+**让 AI 成为你的桌面助手，从此告别繁琐的电脑操作！** ✨
