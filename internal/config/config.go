@@ -144,7 +144,7 @@ func (c *Config) Validate() error {
 	}
 
 	// 验证 AI 默认提供商
-	if c.AI.DefaultProvider != "chatgpt" && c.AI.DefaultProvider != "claude" && c.AI.DefaultProvider != "deepseek" {
+	if c.AI.DefaultProvider != "chatgpt" && c.AI.DefaultProvider != "claude" && c.AI.DefaultProvider != "deepseek" && c.AI.DefaultProvider != "mock" {
 		return fmt.Errorf("无效的 AI 提供商: %s", c.AI.DefaultProvider)
 	}
 
