@@ -240,17 +240,20 @@ qwall2/
 ## 📚 文档
 
 ### 快速开始
-- ⚡ [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - 快速参考卡（推荐）
+- ⚡ [docs/QUICK_REFERENCE.md](docs/QUICK_REFERENCE.md) - 快速参考卡（推荐）
 - 🚀 [docs/QUICKSTART.md](docs/QUICKSTART.md) - 快速开始指南
+- 📜 [docs/SCRIPTS.md](docs/SCRIPTS.md) - 脚本使用说明
 
 ### 详细文档
 - 🏛️ [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - 系统架构详解
 - 🎬 [docs/DEMO.md](docs/DEMO.md) - 演示和测试用例
 - 📊 [docs/STATUS.md](docs/STATUS.md) - 项目状态报告
+- 🧹 [docs/PROJECT_CLEANUP.md](docs/PROJECT_CLEANUP.md) - 项目整理报告
 
 ### 配置指南
 - 🌐 [docs/THIRD_PARTY_API.md](docs/THIRD_PARTY_API.md) - 第三方 API 配置
 - 🔧 [docs/MODEL_PARAMS_GUIDE.md](docs/MODEL_PARAMS_GUIDE.md) - 模型参数配置
+- ⚙️ [config.yaml.example](config.yaml.example) - 配置文件示例
 
 ### 文档导航
 - 📚 [docs/DOCS.md](docs/DOCS.md) - 文档索引导航
