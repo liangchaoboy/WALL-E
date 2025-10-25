@@ -36,7 +36,7 @@ server:
 # 清理构建文件
 clean:
 	@echo "🧹 清理构建文件..."
-	@rm -f qwall2-server qwall2-mcp
+	@rm -f qwall2-server
 	@rm -f coverage.out coverage.html
 	@echo "✅ 清理完成！"
 
