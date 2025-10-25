@@ -21,6 +21,22 @@
 
 ---
 
+### 1.5 快速参考 ⚡
+
+**[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - 快速参考卡
+
+**适合人群**：所有用户  
+**阅读时间**：2 分钟  
+**内容**：
+- ✅ 快速启动命令
+- ✅ 项目结构一览
+- ✅ 常用命令速查
+- ✅ 文档快速导航
+- ✅ 环境变量配置
+- ✅ 常见问题速查
+
+---
+
 ### 2. 详细教程 📖
 
 **[QUICKSTART.md](QUICKSTART.md)** - 详细的快速开始指南
@@ -82,6 +98,28 @@
 - 配置多个 AI 服务
 - 使用 .env 文件管理配置
 - 开发/生产环境分离
+
+---
+
+### 2.7 脚本使用说明 📜
+
+**[SCRIPTS.md](SCRIPTS.md)** - 所有脚本的使用说明
+
+**适合人群**：所有用户  
+**阅读时间**：10 分钟  
+**内容**：
+- ✅ 启动脚本使用说明
+- ✅ 测试脚本使用说明
+- ✅ 安装脚本使用说明
+- ✅ 构建工具（Makefile）说明
+- ✅ 配置文件说明
+- ✅ 常见问题解答
+
+**推荐场景**：
+- 不熟悉各脚本的功能
+- 需要查看脚本参数
+- 学习如何使用 Makefile
+- 排查脚本相关问题
 
 ---
 
@@ -147,6 +185,27 @@
 
 ---
 
+### 6. 项目整理报告 🧹
+
+**[PROJECT_CLEANUP.md](PROJECT_CLEANUP.md)** - 项目整理和重构报告
+
+**适合人群**：项目维护者、开发者  
+**阅读时间**：10 分钟  
+**内容**：
+- ✅ 整理完成总结
+- ✅ 删除的旧文件
+- ✅ 保留的核心文件
+- ✅ 文档整理情况
+- ✅ 项目结构优化
+- ✅ 改进对比
+
+**推荐章节**：
+- 整理完成总结：快速了解整理成果
+- 项目结构优化：理解新的组织方式
+- 后续建议：了解维护建议
+
+---
+
 ## 🎯 按需求查找
 
 ### 我想...
@@ -188,15 +247,17 @@
 ### 路径 1：用户快速上手
 
 ```
-1. ../README.md（快速开始）
+1. QUICK_REFERENCE.md（快速参考）
    ↓
-2. QUICKSTART.md（详细教程）
+2. ../README.md（快速开始）
    ↓
-3. DEMO.md（功能演示）
+3. QUICKSTART.md（详细教程）
+   ↓
+4. DEMO.md（功能演示）
 ```
 
 **适合**：想要快速使用系统的用户  
-**时间**：30 分钟
+**时间**：35 分钟
 
 ---
 
@@ -381,12 +442,16 @@ A: 查看 [QUICKSTART.md](QUICKSTART.md#故障排查)
 ## 🎯 快速链接
 
 - **项目概览**：[../README.md](../README.md)
+- **快速参考**：[QUICK_REFERENCE.md](QUICK_REFERENCE.md) ⭐ 推荐
 - **快速开始**：[QUICKSTART.md](QUICKSTART.md)
+- **脚本说明**：[SCRIPTS.md](SCRIPTS.md) 🆕 新增
 - **第三方 API**：[THIRD_PARTY_API.md](THIRD_PARTY_API.md) 
-- **模型参数**：[MODEL_PARAMS_GUIDE.md](MODEL_PARAMS_GUIDE.md) ⭐ 新增
+- **模型参数**：[MODEL_PARAMS_GUIDE.md](MODEL_PARAMS_GUIDE.md)
 - **系统架构**：[ARCHITECTURE.md](ARCHITECTURE.md)
 - **功能演示**：[DEMO.md](DEMO.md)
 - **项目状态**：[STATUS.md](STATUS.md)
+- **整理报告**：[PROJECT_CLEANUP.md](PROJECT_CLEANUP.md)
+- **配置示例**：[../config.yaml.example](../config.yaml.example) 🆕 新增
 
 ---
 
