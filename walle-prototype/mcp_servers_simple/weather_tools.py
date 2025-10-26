@@ -5,6 +5,7 @@
 """
 
 import webbrowser
+from urllib.parse import quote
 
 def get_weather(city: str, date: str = "today") -> str:
     """
@@ -17,7 +18,8 @@ def get_weather(city: str, date: str = "today") -> str:
     Returns:
         Weather information or redirect message
     """
-    url = f"https://www.baidu.com/s?wd={city}{date}天气"
+    query = f"{city}{date}天气"
+    url = f"https://www.baidu.com/s?wd={quote(query)}"
     webbrowser.open(url)
     
     return f"已打开{city}{date}天气查询"
@@ -33,7 +35,8 @@ def compare_weather(city1: str, city2: str) -> str:
     Returns:
         Status message
     """
-    url = f"https://www.baidu.com/s?wd={city1}+{city2}+天气对比"
+    query = f"{city1} {city2} 天气对比"
+    url = f"https://www.baidu.com/s?wd={quote(query)}"
     webbrowser.open(url)
     
     return f"已打开{city1}和{city2}天气对比"
