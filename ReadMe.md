@@ -77,7 +77,7 @@ FASTGPT平台 -> QWen大模型 -> MCP工具集合 (地图/天气/音乐/浏览�
 
 ```
     见Makefile
-    make build-env ##配置fastgpt_api_key ，安装vue依赖
+    make build-env ##配置fastgpt_api_key ，安装vue依赖 , key 找陈涛/梁超/赵建峰要！
     make run-site
     make run-serve
     由于MCP已经部署在云端，可以本地无需启动，如需修改测试

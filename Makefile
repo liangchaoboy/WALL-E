@@ -1,5 +1,4 @@
 build-env:
-	export FASTGPT_API_KEY="get api key from chentao or liangcha"
 	cd  voice-assistant; rm -rf node_modules; npm install
 # ------------------------------------------------------------------------
 
@@ -13,4 +12,7 @@ run-mcp:
 # ------------------------------------------------------------------------
 
 run-serve:
-	cd WALL-E-SERVE; go clean -cache; go run main.go
+	export FASTGPT_API_KEY="get api key from liangchao or chentao or zhaojianfeng " && \
+	cd WALL-E-SERVE && \
+	go clean -cache && \
+	go run main.go
