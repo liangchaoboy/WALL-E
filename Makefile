@@ -1,3 +1,8 @@
+build-env:
+	export FASTGPT_API_KEY="fastgptkey找chentao/lianhchao获取"
+	cd  voice-assistant; rm -rf node_modules; npm install
+# ------------------------------------------------------------------------
+
 run-site:
 	cd  voice-assistant; rm -rf .tmp
 	cd  voice-assistant; npm run serve

@@ -3,8 +3,17 @@ package fast
 import (
 	"fmt"
 	"log"
+	"os"
 	"testing"
 )
+
+func TestFASTGPT_API_KEY(t *testing.T) {
+	apiKey := os.Getenv("FASTGPT_API_KEY")
+	if apiKey == "" {
+		t.Log("key is null")
+	}
+	log.Print(apiKey)
+}
 
 func TestCreateChatCompletion(t *testing.T) {
 	request := AIReqData{

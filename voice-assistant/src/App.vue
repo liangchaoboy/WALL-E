@@ -214,7 +214,15 @@ export default {
         // 只有URL不为空时才跳转
         if (data.url && data.url.trim() !== '') {
           //this.addDebugLog(`服务端返回导航URL：${data.url}`)
-          window.open(data.url, '_blank')
+          //window.open(data.url, '_blank')
+          // 修改为：
+          const link = document.createElement('a')
+          link.href = data.url
+          link.target = '_blank' // 新标签页打开
+          link.style.display = 'none' // 隐藏标签
+          document.body.appendChild(link)
+          link.click() // 模拟点击
+          document.body.removeChild(link) // 清理标签
           this.statusText = '正在打开导航页面...'
         } else {
           //this.addDebugLog('服务端返回的URL为空，不进行跳转')

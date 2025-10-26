@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -135,7 +136,14 @@ func ChatFromGPT(request AIReqData) (result *ParsedChatCompletionResult, err err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	fastclient := getClient("fastgpt-pAC7ttUNFMUNJIY7MoXkVvU5zhMcS6iidDPvFEvab1u3wvcr5ZtVEm7WInSymB7")
+
+	apiKey := os.Getenv("FASTGPT_API_KEY")
+	if apiKey == "" {
+		return nil, errors.New("FASTGPT_API_KEY not set")
+	}
+	log.Print(apiKey)
+
+	fastclient := getClient(apiKey)
 
 	resp, err := fastclient.Do(req)
 	if err != nil {
