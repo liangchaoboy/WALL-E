@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>zh_CN</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.walle.desktop</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>WALL-E</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2024 WALL-E. All rights reserved.</string>
+    <key>NSMainStoryboardFile</key>
+    <string></string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <key>LSUIElement</key>
+    <true/>
+    
+    <key>NSMicrophoneUsageDescription</key>
+    <string>WALL-E 需要访问麦克风来进行语音识别和唤醒词检测。</string>
+    
+    <key>NSAppleEventsUsageDescription</key>
+    <string>WALL-E 需要发送 Apple Events 来控制其他应用程序。</string>
+    
+    <key>NSAppleScriptEnabled</key>
+    <true/>
+    
+    <key>NSAccessibilityUsageDescription</key>
+    <string>WALL-E 需要辅助功能权限来监听全局快捷键(Cmd+Space)。</string>
+</dict>
+</plist>

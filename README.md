@@ -8,7 +8,9 @@
 
 本项目正在进行全面重构，聚焦于构建一个 AI 驱动的桌面操作系统代理。
 
-**完整的产品需求文档 (PRD) 请查看：[PRD.md](./PRD.md)**
+**重要文档**:
+- **[PROJECT_PROGRESS.md](./PROJECT_PROGRESS.md)** - 📊 项目进度说明 (已完成阶段一、二)
+- **[PRD.md](./PRD.md)** - 完整的产品需求文档
 
 ---
 
@@ -80,29 +82,47 @@ MCP工具层 (地图/天气/音乐/浏览器/系统控制)
 
 ---
 
-## 📅 开发计划
+## 📅 项目进度
 
-项目采用分阶段实施策略，总计 12 周完成：
+项目采用分阶段实施策略:
 
-- **阶段一 (4 小时)**：MVP - 基础导航功能
-- **阶段二 (3 小时)**：功能扩展 - 天气、音乐、应用控制
-- **阶段三 (3 小时)**：高级能力 - 浏览器控制、系统控制
-- **阶段四 (1 天)**：优化与发布
+- ✅ **阶段一: 基础原型** ([walle-prototype](./walle-prototype/)) - Python + MCP 概念验证 **已完成**
+- ✅ **阶段二: 进阶实现** ([walle-prototype-vue](./walle-prototype-vue/)) - Vue + Go + FastGPT **已完成**
+- 🔄 **阶段三: 桌面应用** - macOS 原生应用 **规划中**
 
-详细计划请查看 [PRD.md](./PRD.md)
+**🎥 阶段二演示视频**: [观看演示](https://ticket-imgs.qnssl.com/fast-map-mcp2025-10-26%2020.12.47.mp4)
+
+详细进度请查看 [PROJECT_PROGRESS.md](./PROJECT_PROGRESS.md)
 
 ---
 
 ## 📖 文档导航
 
+### 项目文档
+- **[PROJECT_PROGRESS.md](./PROJECT_PROGRESS.md)** - 📊 项目进度说明
 - **[PRD.md](./PRD.md)** - 完整的产品需求文档
-  - 产品概述与愿景
-  - 用户故事与场景
-  - 功能需求详解
-  - 技术架构设计
-  - 实施计划与测试策略
-  - 安全与隐私
-  - 风险与挑战
+- **[CLAUDE.md](./CLAUDE.md)** - Claude AI 项目说明
+
+### 阶段一: 基础原型 (Python)
+- **目录**: [walle-prototype/](./walle-prototype/)
+- **文档**: [README](./walle-prototype/README.md) | [MCP架构](./walle-prototype/README_MCP.md) | [测试文档](./walle-prototype/README_TESTS.md)
+- **状态**: ✅ 已完成
+- **技术**: Python + OpenAI API + MCP
+- **功能**: 地图导航、天气查询、音乐播放
+
+### 阶段二: 进阶实现 (Vue + Go)
+- **目录**: [walle-prototype-vue/](./walle-prototype-vue/)
+- **文档**: [README](./walle-prototype-vue/ReadMe.md) | [架构设计](./walle-prototype-vue/docs/架构设计文档.md)
+- **演示**: [观看视频](https://ticket-imgs.qnssl.com/fast-map-mcp2025-10-26%2020.12.47.mp4)
+- **状态**: ✅ 已完成
+- **技术**: Vue.js 3 + Go + FastGPT + QWen + MCP
+- **架构**: 前后端分离 + 云端 AI
+- **功能**: 实时语音识别、智能对话、地图导航
+
+### 阶段三: 桌面应用 (规划)
+- **状态**: 🔄 规划中
+- **技术**: Swift + SwiftUI + Go
+- **目标**: macOS 原生应用 + 唤醒词检测
 
 ---
 
