@@ -149,7 +149,7 @@ export default {
       }
       
       this.recognition.onstart = () => {
-        this.statusText = '正在聆听...请说"小悦小悦"'
+        this.statusText = '正在聆听..."'
       }
       
       this.recognition.onend = () => {
@@ -226,7 +226,7 @@ export default {
           this.statusText = '正在打开导航页面...'
         } else {
           //this.addDebugLog('服务端返回的URL为空，不进行跳转')
-          this.statusText = '未获取到导航链接'
+          //导航链接'
         }
         
         setTimeout(() => {
