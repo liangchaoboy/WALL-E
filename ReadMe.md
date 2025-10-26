@@ -50,11 +50,11 @@
 
 ### 核心技术栈
 
-- **客户端**：Swift + SwiftUI (macOS 原生)
+- **客户端**：vue
 - **后端服务**：Go
-- **AI 引擎**：ChatGPT / Claude / DeepSeek
-- **语音识别**：阿里云 / OpenAI Whisper / 本地模型
-- **工具协议**：MCP (Model Context Protocol)
+- **AI 引擎**：fastgpt + Qwen
+- **语音识别**：本地模型
+- **工具协议**：MCP
 
 ### 系统架构
 
