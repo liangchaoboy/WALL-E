@@ -1,0 +1,394 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		WALLEApp_swift /* WALLEApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = WALLEApp_swift_ref /* WALLEApp.swift */; };
+		AppDelegate_swift /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AppDelegate_swift_ref /* AppDelegate.swift */; };
+		InputWindowView_swift /* InputWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = InputWindowView_swift_ref /* InputWindowView.swift */; };
+		MenuBarView_swift /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = MenuBarView_swift_ref /* MenuBarView.swift */; };
+		SettingsView_swift /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SettingsView_swift_ref /* SettingsView.swift */; };
+		WakeWordDetector_swift /* WakeWordDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = WakeWordDetector_swift_ref /* WakeWordDetector.swift */; };
+		AudioRecorder_swift /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AudioRecorder_swift_ref /* AudioRecorder.swift */; };
+		VADDetector_swift /* VADDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = VADDetector_swift_ref /* VADDetector.swift */; };
+		GRPCClient_swift /* GRPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = GRPCClient_swift_ref /* GRPCClient.swift */; };
+		AudioConfig_swift /* AudioConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AudioConfig_swift_ref /* AudioConfig.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		WALLE_app /* WALLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WALLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		WALLEApp_swift_ref /* WALLEApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WALLEApp.swift; sourceTree = "<group>"; };
+		AppDelegate_swift_ref /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		InputWindowView_swift_ref /* InputWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputWindowView.swift; sourceTree = "<group>"; };
+		MenuBarView_swift_ref /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		SettingsView_swift_ref /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		WakeWordDetector_swift_ref /* WakeWordDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeWordDetector.swift; sourceTree = "<group>"; };
+		AudioRecorder_swift_ref /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		VADDetector_swift_ref /* VADDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VADDetector.swift; sourceTree = "<group>"; };
+		GRPCClient_swift_ref /* GRPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GRPCClient.swift; sourceTree = "<group>"; };
+		AudioConfig_swift_ref /* AudioConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioConfig.swift; sourceTree = "<group>"; };
+		Info_plist /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		WALLE_frameworks /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		WALLE_root /* WALLE */ = {
+			isa = PBXGroup;
+			children = (
+				WALLE_dir /* WALLE */,
+				Products_group /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		WALLE_dir /* WALLE */ = {
+			isa = PBXGroup;
+			children = (
+				App_dir /* App */,
+				Views_dir /* Views */,
+				Services_dir /* Services */,
+				Models_dir /* Models */,
+				Resources_dir /* Resources */,
+			);
+			path = WALLE;
+			sourceTree = "<group>";
+		};
+		App_dir /* App */ = {
+			isa = PBXGroup;
+			children = (
+				WALLEApp_swift_ref /* WALLEApp.swift */,
+				AppDelegate_swift_ref /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		Views_dir /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				InputWindowView_swift_ref /* InputWindowView.swift */,
+				MenuBarView_swift_ref /* MenuBarView.swift */,
+				SettingsView_swift_ref /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		Services_dir /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				WakeWordDetector_swift_ref /* WakeWordDetector.swift */,
+				AudioRecorder_swift_ref /* AudioRecorder.swift */,
+				VADDetector_swift_ref /* VADDetector.swift */,
+				GRPCClient_swift_ref /* GRPCClient.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		Models_dir /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AudioConfig_swift_ref /* AudioConfig.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		Resources_dir /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				Info_plist /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		Products_group /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				WALLE_app /* WALLE.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		WALLE_target /* WALLE */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = WALLE_buildConfigurationList /* Build configuration list for PBXNativeTarget "WALLE" */;
+			buildPhases = (
+				WALLE_sources /* Sources */,
+				WALLE_frameworks /* Frameworks */,
+				WALLE_resources /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WALLE;
+			productName = WALLE;
+			productReference = WALLE_app /* WALLE.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		WALLE_project /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = WALLE_project_buildConfigurationList /* Build configuration list for PBXProject "WALLE" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = "zh-Hans";
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				"zh-Hans",
+				en,
+			);
+			mainGroup = WALLE_root /* WALLE */;
+			productRefGroup = Products_group /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				WALLE_target /* WALLE */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		WALLE_resources /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		WALLE_sources /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				WALLEApp_swift /* WALLEApp.swift in Sources */,
+				AppDelegate_swift /* AppDelegate.swift in Sources */,
+				InputWindowView_swift /* InputWindowView.swift in Sources */,
+				MenuBarView_swift /* MenuBarView.swift in Sources */,
+				SettingsView_swift /* SettingsView.swift in Sources */,
+				WakeWordDetector_swift /* WakeWordDetector.swift in Sources */,
+				AudioRecorder_swift /* AudioRecorder.swift in Sources */,
+				VADDetector_swift /* VADDetector.swift in Sources */,
+				GRPCClient_swift /* GRPCClient.swift in Sources */,
+				AudioConfig_swift /* AudioConfig.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		Debug_WALLE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WALLE/Resources/WALLE.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WALLE/Resources/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 WALL-E. All rights reserved.";
+				INFOPLIST_KEY_NSMainStoryboardFile = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.walle.desktop;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		Release_WALLE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WALLE/Resources/WALLE.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WALLE/Resources/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024 WALL-E. All rights reserved.";
+				INFOPLIST_KEY_NSMainStoryboardFile = "";
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.walle.desktop;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		Debug_Project /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		Release_Project /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		WALLE_buildConfigurationList /* Build configuration list for PBXNativeTarget "WALLE" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				Debug_WALLE /* Debug */,
+				Release_WALLE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		WALLE_project_buildConfigurationList /* Build configuration list for PBXProject "WALLE" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				Debug_Project /* Debug */,
+				Release_Project /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = WALLE_project /* Project object */;
+}
