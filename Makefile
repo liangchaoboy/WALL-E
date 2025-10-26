@@ -1,5 +1,5 @@
 build-env:
-	export FASTGPT_API_KEY="fastgpt-pAC7ttUNFMUNJIY7MoXkVvU5zhMcS6iidDPvFEvab1u3wvcr5ZtVEm7WInSymB7"
+	export FASTGPT_API_KEY="get api key from chentao or liangcha"
 	cd  voice-assistant; rm -rf node_modules; npm install
 # ------------------------------------------------------------------------
 
