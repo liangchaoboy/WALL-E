@@ -5,7 +5,7 @@ Provides navigation tools for WALL-E
 """
 
 import webbrowser
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote
 
 from mcp.server.fastmcp import FastMCP
 
@@ -32,16 +32,16 @@ def _extract_city_name(address: str) -> str:
 
 def _generate_baidu_url(origin: str, destination: str) -> str:
     """Generate Baidu Maps navigation URL with proper API"""
-    base_url = "http://api.map.baidu.com/direction"
+    base_url = "https://map.baidu.com/direction"
     params = {
-        "origin": origin,
-        "destination": destination,
+        "origin": quote(origin),
+        "destination": quote(destination),
         "mode": "transit",
         "region": _extract_city_name(destination),
         "output": "html",
         "src": "webapp.walle.navigation"
     }
-    return f"{base_url}?{urlencode(params)}"
+    return f"{base_url}?{urlencode(params, safe='', quote_via=quote)}"
 
 def _generate_amap_url(origin: str, destination: str) -> str:
     """Generate Amap navigation URL"""
@@ -76,8 +76,11 @@ def navigate(origin: str, destination: str, map_service: str = "baidu") -> str:
     Returns:
         Status message
     """
-    if not origin or not destination:
+    if not origin or not origin.strip() or not destination or not destination.strip():
         return "错误: 起点和终点不能为空"
+    
+    origin = origin.strip()
+    destination = destination.strip()
     
     url_generators = {
         "baidu": _generate_baidu_url,
@@ -119,10 +122,10 @@ def search_location(query: str, map_service: str = "baidu") -> str:
     Returns:
         Status message
     """
-    if not query:
+    if not query or not query.strip():
         return "错误: 搜索关键词不能为空"
     
-    from urllib.parse import quote
+    query = query.strip()
     
     search_urls = {
         "baidu": f"https://map.baidu.com/?query={quote(query)}",

@@ -18,6 +18,11 @@ def get_weather(city: str, date: str = "today") -> str:
     Returns:
         Weather information or redirect message
     """
+    if not city or not city.strip():
+        return "错误: 城市名称不能为空"
+    
+    city = city.strip()
+    date = date.strip() if date else "today"
     query = f"{city}{date}天气"
     url = f"https://www.baidu.com/s?wd={quote(query)}"
     webbrowser.open(url)
@@ -35,6 +40,11 @@ def compare_weather(city1: str, city2: str) -> str:
     Returns:
         Status message
     """
+    if not city1 or not city1.strip() or not city2 or not city2.strip():
+        return "错误: 城市名称不能为空"
+    
+    city1 = city1.strip()
+    city2 = city2.strip()
     query = f"{city1} {city2} 天气对比"
     url = f"https://www.baidu.com/s?wd={quote(query)}"
     webbrowser.open(url)

@@ -5,6 +5,7 @@
 """
 
 import webbrowser
+from urllib.parse import quote
 
 def play_music(song: str, artist: str = "", platform: str = "qq") -> str:
     """
@@ -18,12 +19,17 @@ def play_music(song: str, artist: str = "", platform: str = "qq") -> str:
     Returns:
         Status message
     """
+    if not song or not song.strip():
+        return "错误: 歌曲名称不能为空"
+    
+    song = song.strip()
+    artist = artist.strip() if artist else ""
     query = f"{artist} {song}" if artist else song
     
     platform_urls = {
-        "qq": f"https://y.qq.com/n/ryqq/search?w={query}",
-        "netease": f"https://music.163.com/#/search/m/?s={query}",
-        "spotify": f"https://open.spotify.com/search/{query}"
+        "qq": f"https://y.qq.com/n/ryqq/search?w={quote(query)}",
+        "netease": f"https://music.163.com/#/search/m/?s={quote(query)}",
+        "spotify": f"https://open.spotify.com/search/{quote(query)}"
     }
     
     url = platform_urls.get(platform, platform_urls["qq"])
@@ -42,10 +48,14 @@ def search_playlist(keyword: str, platform: str = "qq") -> str:
     Returns:
         Status message
     """
+    if not keyword or not keyword.strip():
+        return "错误: 搜索关键词不能为空"
+    
+    keyword = keyword.strip()
     platform_urls = {
-        "qq": f"https://y.qq.com/n/ryqq/search?w={keyword}&t=playlist",
-        "netease": f"https://music.163.com/#/search/m/?s={keyword}&type=1000",
-        "spotify": f"https://open.spotify.com/search/{keyword}%20playlist"
+        "qq": f"https://y.qq.com/n/ryqq/search?w={quote(keyword)}&t=playlist",
+        "netease": f"https://music.163.com/#/search/m/?s={quote(keyword)}&type=1000",
+        "spotify": f"https://open.spotify.com/search/{quote(keyword)}%20playlist"
     }
     
     url = platform_urls.get(platform, platform_urls["qq"])
