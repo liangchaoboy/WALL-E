@@ -6,6 +6,7 @@ Manages MCP servers and provides unified tool access
 
 import importlib
 import sys
+import asyncio
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
@@ -47,11 +48,42 @@ class MCPClient:
             server_name: Name of the server
             mcp_server: MCP server instance
         """
-        if hasattr(mcp_server, '_tools'):
-            for tool_name, tool_func in mcp_server._tools.items():
+        try:
+            # Use asyncio to get tools from MCP server
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            tools = loop.run_until_complete(mcp_server.list_tools())
+            loop.close()
+            
+            for tool in tools:
+                tool_name = tool.name
                 full_tool_name = f"{server_name}.{tool_name}"
-                self.tools[full_tool_name] = tool_func
-                self.tools[tool_name] = tool_func
+                
+                # Create synchronous wrapper with proper closure
+                def create_sync_wrapper(name):
+                    def sync_tool_wrapper(**kwargs):
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
+                        try:
+                            result = loop.run_until_complete(mcp_server.call_tool(name, kwargs))
+                            # Extract the actual result from the MCP response
+                            if isinstance(result, tuple) and len(result) >= 2:
+                                content, metadata = result
+                                if isinstance(metadata, dict) and 'result' in metadata:
+                                    return metadata['result']
+                                elif content and hasattr(content[0], 'text'):
+                                    return content[0].text
+                            return str(result)
+                        finally:
+                            loop.close()
+                    return sync_tool_wrapper
+                
+                sync_wrapper = create_sync_wrapper(tool_name)
+                self.tools[full_tool_name] = sync_wrapper
+                self.tools[tool_name] = sync_wrapper
+                
+        except Exception as e:
+            print(f"⚠️  工具发现失败 ({server_name}): {e}")
     
     def list_tools(self) -> List[str]:
         """List all available tools"""

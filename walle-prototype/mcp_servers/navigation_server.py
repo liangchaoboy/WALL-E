@@ -6,14 +6,9 @@ Provides navigation tools for WALL-E
 
 import webbrowser
 
-try:
-    from mcp.server.fastmcp import FastMCP
-    mcp = FastMCP("Navigation")
-    HAS_MCP = True
-except ImportError:
-    HAS_MCP = False
-    mcp = None
-    print("⚠️  MCP 库未安装,使用简化模式")
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("Navigation")
 
 @mcp.tool()
 def navigate(origin: str, destination: str, map_service: str = "baidu") -> str:
