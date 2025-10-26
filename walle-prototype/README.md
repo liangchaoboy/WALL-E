@@ -135,6 +135,48 @@ $ python voice_nav.py
   - 其他兼容服务的对应地址
 - `API_KEY`: 对应的 API 密钥
 - `MODEL`: 使用的模型名称 (如: `gpt-3.5-turbo`, `deepseek-chat`, 等)
+- `LOG_LEVEL`: 日志级别 (可选,默认为 `INFO`)
+  - `DEBUG`: 详细的调试信息,包括所有函数调用和参数
+  - `INFO`: 关键操作信息,如程序启动、工具调用等 (推荐)
+  - `WARNING`: 警告信息,如识别失败、超时等
+  - `ERROR`: 错误信息,如异常和失败
+  - `CRITICAL`: 严重错误
+
+### 日志配置示例
+
+在 `.env` 文件中添加:
+```bash
+# API 配置
+API_KEY=your_api_key_here
+BASE_URL=https://api.openai.com/v1
+MODEL=gpt-3.5-turbo
+
+# 日志级别 (可选,默认 INFO)
+LOG_LEVEL=INFO
+```
+
+### 日志输出示例
+
+```
+2025-10-26 13:00:00 - WALL-E.VoiceNav - INFO - WALL-E 语音助手启动
+2025-10-26 13:00:01 - WALL-E.MCPClient - INFO - 创建 MCP 客户端...
+2025-10-26 13:00:01 - WALL-E.MCPClient - INFO - 成功注册 MCP Server: navigation
+2025-10-26 13:00:01 - WALL-E.MCPClient - INFO - 成功注册 MCP Server: weather
+2025-10-26 13:00:01 - WALL-E.MCPClient - INFO - 成功注册 MCP Server: music
+2025-10-26 13:00:02 - WALL-E.VoiceNav - INFO - 已加载 6 个 MCP 工具
+2025-10-26 13:00:02 - WALL-E.VoiceNav - INFO - 进入主循环,等待用户输入...
+2025-10-26 13:00:03 - WALL-E.VoiceNav - INFO - 开始监听语音输入...
+2025-10-26 13:00:05 - WALL-E.VoiceNav - INFO - 语音识别成功: 从上海到北京
+2025-10-26 13:00:05 - WALL-E.VoiceNav - INFO - 开始 AI 理解用户输入: 从上海到北京
+2025-10-26 13:00:06 - WALL-E.VoiceNav - INFO - AI 理解结果: tool=navigate, params={'origin': '上海', 'destination': '北京'}
+2025-10-26 13:00:06 - WALL-E.VoiceNav - INFO - 执行 MCP 工具: navigate, 参数: {'origin': '上海', 'destination': '北京'}
+2025-10-26 13:00:06 - WALL-E.VoiceNav - INFO - 工具执行成功: 已打开百度地图: 上海 → 北京
+```
+
+使用 DEBUG 级别可以看到更详细的信息:
+```bash
+LOG_LEVEL=DEBUG python voice_nav_mcp.py
+```
 
 ## 📖 更多文档
 
