@@ -60,6 +60,8 @@
    ```bash
    python demo_mcp.py
    ```
+   
+   📖 **详细使用说明**: 查看 [DEMO_MCP_USAGE.md](./DEMO_MCP_USAGE.md) 了解 `demo_mcp.py` 的完整使用指南
 
 3. 运行 MCP 版语音助手:
    ```bash
@@ -136,7 +138,9 @@ $ python voice_nav.py
 
 ## 📖 更多文档
 
+- **[DEMO_MCP_USAGE.md](./DEMO_MCP_USAGE.md)** - demo_mcp.py 详细使用说明 ⭐ 新手必读
 - **[README_MCP.md](./README_MCP.md)** - MCP 架构详细文档
+- **[README_TESTS.md](./README_TESTS.md)** - 测试说明文档
 - **[../PRD.md](../PRD.md)** - 完整产品需求文档
 - **[../docs/架构设计文档.md](../docs/架构设计文档.md)** - 技术架构设计
 - **[../docs/1天快速原型计划.md](../docs/1天快速原型计划.md)** - 原型开发计划
