@@ -32,23 +32,40 @@ def _extract_city_name(address: str) -> str:
 
 def _generate_baidu_url(origin: str, destination: str) -> str:
     """Generate Baidu Maps navigation URL with proper API"""
-    base_url = "https://map.baidu.com/direction"
+    
+    # 百度地图正确格式（基于实际分享链接）
+    # 路径: /dir/{起点}/{终点}/
+    # 查询参数: querytype=bt&sq={起点}&eq={终点}
+    
+    # URL编码地点名称
+    origin_encoded = quote(origin)
+    dest_encoded = quote(destination)
+    
+    # 构建查询参数
     params = {
-        "origin": quote(origin),
-        "destination": quote(destination),
-        "mode": "transit",
-        "region": _extract_city_name(destination),
-        "output": "html",
-        "src": "webapp.walle.navigation"
+        "querytype": "bt",  # 必需参数
+        "sq": origin,       # 起点 (search query)
+        "eq": destination   # 终点 (end query)
     }
-    return f"{base_url}?{urlencode(params, safe='', quote_via=quote)}"
+    query_string = urlencode(params, doseq=False)
+    
+    # 构建完整URL：路径中起点在前，终点在后
+    # 注意：路径末尾不要加斜杠，直接用?连接查询参数
+    url = f"https://map.baidu.com/dir/{origin_encoded}/{dest_encoded}?{query_string}"
+    
+    return url
 
 def _generate_amap_url(origin: str, destination: str) -> str:
-    """Generate Amap navigation URL"""
-    base_url = "https://www.amap.com/dir"
+    """Generate Amap navigation URL
+    
+    使用高德地图URI API格式：
+    https://uri.amap.com/navigation?from=起点&to=终点&mode=car
+    """
+    base_url = "https://uri.amap.com/navigation"
     params = {
         "from": origin,
-        "to": destination
+        "to": destination,
+        "mode": "car"  # car:驾车, bus:公交, walk:步行
     }
     return f"{base_url}?{urlencode(params)}"
 
@@ -64,14 +81,15 @@ def _generate_google_url(origin: str, destination: str) -> str:
     return f"{base_url}?{urlencode(params)}"
 
 @mcp.tool()
-def navigate(origin: str, destination: str, map_service: str = "baidu") -> str:
+def navigate(origin: str, destination: str, map_service: str = "amap") -> str:
     """
     Open map navigation from origin to destination
     
     Args:
         origin: Starting location
         destination: Target location
-        map_service: Map service to use (baidu, google, amap)
+        map_service: Map service to use (amap, baidu, google)
+                    默认使用高德地图(amap)，体验更好，会自动规划路线
     
     Returns:
         Status message
@@ -98,14 +116,17 @@ def navigate(origin: str, destination: str, map_service: str = "baidu") -> str:
             "google": "Google Maps",
             "amap": "高德地图"
         }
-        map_name = map_names.get(map_service, "百度地图")
+        map_name = map_names.get(map_service, "高德地图")
         
         return (
-            f"✅ 成功打开 {map_name}\n\n"
+            f"✅ {map_name}已打开\n\n"
             f"📍 起点：{origin}\n"
             f"📍 终点：{destination}\n"
-            f"🔗 导航链接：{url}\n\n"
-            f"地图应用已在浏览器中打开，正在准备导航..."
+            f"🔗 {url}\n\n"
+            f"📌 下一步操作：\n"
+            f"   1. 在打开的页面中确认起点和终点\n"
+            f"   2. 点击【开始导航】或【路线规划】按钮\n"
+            f"   3. 选择出行方式（驾车/公交/步行）"
         )
     except Exception as e:
         return f"打开地图失败: {e}"

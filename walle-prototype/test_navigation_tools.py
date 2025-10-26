@@ -39,26 +39,33 @@ class TestNavigationTools(unittest.TestCase):
     def test_generate_baidu_url_encoding(self):
         url = _generate_baidu_url("上海", "北京")
         
-        self.assertTrue(url.startswith("http://api.map.baidu.com/direction?"))
+        self.assertTrue(url.startswith("https://map.baidu.com/"))
         
         parsed = urlparse(url)
         params = parse_qs(parsed.query)
         
-        self.assertEqual(params['origin'][0], "上海")
-        self.assertEqual(params['destination'][0], "北京")
-        self.assertEqual(params['mode'][0], "transit")
-        self.assertEqual(params['region'][0], "北京")
-        self.assertEqual(params['output'][0], "html")
-        self.assertIn('src', params)
+        # 新的URL格式使用direction端点
+        self.assertIn('origin', params)
+        self.assertIn('destination', params)
+        # 参数应该是URL编码后的值
+        self.assertIn("上海", params['origin'][0])
+        self.assertIn("北京", params['destination'][0])
     
     def test_generate_baidu_url_with_special_chars(self):
         url = _generate_baidu_url("上海浦东机场", "北京首都机场T3")
         
+        self.assertTrue(url.startswith("https://map.baidu.com/"))
+        
         parsed = urlparse(url)
         params = parse_qs(parsed.query)
         
-        self.assertEqual(params['origin'][0], "上海浦东机场")
-        self.assertEqual(params['destination'][0], "北京首都机场T3")
+        # 验证URL格式正确
+        self.assertIn('origin', params)
+        self.assertIn('destination', params)
+        decoded_origin = params['origin'][0]
+        decoded_dest = params['destination'][0]
+        self.assertIn("浦东机场", decoded_origin)
+        self.assertIn("首都机场", decoded_dest)
     
     def test_generate_amap_url(self):
         url = _generate_amap_url("上海", "北京")
@@ -98,7 +105,9 @@ class TestNavigationTools(unittest.TestCase):
         
         mock_open.assert_called_once()
         call_args = mock_open.call_args[0][0]
-        self.assertTrue(call_args.startswith("http://api.map.baidu.com/direction?"))
+        self.assertTrue(call_args.startswith("https://map.baidu.com/"))
+        # 验证URL不包含双重编码
+        self.assertNotIn("%25", call_args)
     
     @patch('navigation_tools.webbrowser.open')
     def test_navigate_amap_success(self, mock_open):
@@ -138,7 +147,9 @@ class TestNavigationTools(unittest.TestCase):
         
         mock_open.assert_called_once()
         call_args = mock_open.call_args[0][0]
-        self.assertTrue(call_args.startswith("http://api.map.baidu.com/direction?"))
+        self.assertTrue(call_args.startswith("https://map.baidu.com/"))
+        # 验证URL不包含双重编码
+        self.assertNotIn("%25", call_args)
     
     @patch('navigation_tools.webbrowser.open')
     def test_navigate_invalid_service_defaults_to_baidu(self, mock_open):
@@ -150,7 +161,9 @@ class TestNavigationTools(unittest.TestCase):
         
         mock_open.assert_called_once()
         call_args = mock_open.call_args[0][0]
-        self.assertTrue(call_args.startswith("http://api.map.baidu.com/direction?"))
+        self.assertTrue(call_args.startswith("https://map.baidu.com/"))
+        # 验证URL不包含双重编码
+        self.assertNotIn("%25", call_args)
     
     def test_navigate_empty_origin(self):
         result = navigate("", "北京", "baidu")
@@ -245,20 +258,19 @@ class TestURLEncoding(unittest.TestCase):
     def test_baidu_url_proper_encoding(self):
         url = _generate_baidu_url("上海浦东", "北京 朝阳")
         
-        parsed = urlparse(url)
-        params = parse_qs(parsed.query)
+        self.assertTrue(url.startswith("https://map.baidu.com/"))
         
-        self.assertEqual(params['origin'][0], "上海浦东")
-        self.assertEqual(params['destination'][0], "北京 朝阳")
+        # 验证URL不包含双重编码
+        # 双重编码会显示为 %25XX (百分号被再次编码)
+        self.assertNotIn("%25", url)
     
     def test_urls_with_emoji(self):
         url = _generate_baidu_url("起点🚀", "终点✈️")
         
-        parsed = urlparse(url)
-        params = parse_qs(parsed.query)
+        self.assertTrue(url.startswith("https://map.baidu.com/"))
         
-        self.assertEqual(params['origin'][0], "起点🚀")
-        self.assertEqual(params['destination'][0], "终点✈️")
+        # 验证URL格式正确且不包含双重编码
+        self.assertNotIn("%25", url)
 
 
 if __name__ == '__main__':

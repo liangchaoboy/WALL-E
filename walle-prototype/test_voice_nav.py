@@ -115,10 +115,11 @@ class TestVoiceNav(unittest.TestCase):
 
 class TestVoiceNavMain(unittest.TestCase):
     
+    @patch('builtins.input', return_value='1')  # 模拟选择语音输入模式
     @patch('voice_nav.listen')
     @patch('voice_nav.understand')
     @patch('voice_nav.navigate')
-    def test_main_navigation_flow(self, mock_navigate, mock_understand, mock_listen):
+    def test_main_navigation_flow(self, mock_navigate, mock_understand, mock_listen, mock_input):
         from voice_nav import main
         
         mock_listen.side_effect = ['从上海到北京', '退出']
@@ -130,10 +131,11 @@ class TestVoiceNavMain(unittest.TestCase):
         mock_understand.assert_called_once_with('从上海到北京')
         mock_navigate.assert_called_once_with('上海', '北京')
     
+    @patch('builtins.input', return_value='1')  # 模拟选择语音输入模式
     @patch('voice_nav.listen')
     @patch('voice_nav.understand')
     @patch('voice_nav.navigate')
-    def test_main_unknown_action(self, mock_navigate, mock_understand, mock_listen):
+    def test_main_unknown_action(self, mock_navigate, mock_understand, mock_listen, mock_input):
         from voice_nav import main
         
         mock_listen.side_effect = ['播放音乐', '退出']
@@ -144,8 +146,9 @@ class TestVoiceNavMain(unittest.TestCase):
         self.assertEqual(mock_listen.call_count, 2)
         mock_navigate.assert_not_called()
     
+    @patch('builtins.input', return_value='1')  # 模拟选择语音输入模式
     @patch('voice_nav.listen')
-    def test_main_no_text(self, mock_listen):
+    def test_main_no_text(self, mock_listen, mock_input):
         from voice_nav import main
         
         mock_listen.side_effect = [None, '退出']

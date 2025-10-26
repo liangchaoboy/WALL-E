@@ -67,37 +67,59 @@ print(f"      ✅ {result}")
 if os.getenv("API_KEY"):
     print("\n4️⃣  测试 AI + MCP 集成:")
     
+    # 首先测试API是否可用
     client = OpenAI(
         api_key=os.getenv("API_KEY"),
         base_url=os.getenv("BASE_URL", "https://api.openai.com/v1")
     )
     
-    tools_description = """
+    # 测试API连接
+    api_available = False
+    try:
+        # 使用.env中配置的模型
+        current_model = os.getenv("MODEL", "gpt-3.5-turbo")
+        test_response = client.chat.completions.create(
+            model=current_model,
+            messages=[{"role": "user", "content": "test"}],
+            max_tokens=5
+        )
+        api_available = True
+        print(f"   ✅ API 连接成功 (模型: {current_model})")
+    except Exception as e:
+        print(f"   ⚠️  API 不可用: {str(e)[:100]}")
+        print(f"   ℹ️  这可能是因为:")
+        print(f"      1. API_KEY无效或过期")
+        print(f"      2. 模型 {os.getenv('MODEL', 'gpt-3.5-turbo')} 未开通")
+        print(f"      3. API服务暂时不可用")
+        print(f"\n   ✅ 核心功能正常,可以跳过AI集成测试\n")
+    
+    if api_available:
+        tools_description = """
 可用工具:
-1. navigate(origin, destination, map_service="baidu") - 地图导航
-2. search_location(query, map_service="baidu") - 搜索地点
+1. navigate(origin, destination, map_service="amap") - 地图导航（默认高德）
+2. search_location(query, map_service="amap") - 搜索地点
 3. get_weather(city, date="today") - 查询天气
 4. compare_weather(city1, city2) - 对比天气
 5. play_music(song, artist="", platform="qq") - 播放音乐
 6. search_playlist(keyword, platform="qq") - 搜索歌单
 """
-    
-    test_queries = [
-        "从上海七牛云到虹桥机场",
-        "查看明天北京的天气",
-        "播放周杰伦的七里香"
-    ]
-    
-    for query in test_queries:
-        print(f"\n   用户: {query}")
+
+        test_queries = [
+            "从上海七牛云到虹桥机场",
+            "查看明天北京的天气",
+            "播放周杰伦的七里香"
+        ]
         
-        try:
-            response = client.chat.completions.create(
-                model=os.getenv("MODEL", "gpt-3.5-turbo"),
-                messages=[
-                    {
-                        "role": "system",
-                        "content": f"""你是 WALL-E 智能助手。根据用户需求选择合适的工具。
+        for query in test_queries:
+            print(f"\n   用户: {query}")
+            
+            try:
+                response = client.chat.completions.create(
+                    model=current_model,
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": f"""你是 WALL-E 智能助手。根据用户需求选择合适的工具。
 
 {tools_description}
 
@@ -105,21 +127,40 @@ if os.getenv("API_KEY"):
 - 格式: {{"tool": "工具名", "params": {{参数字典}}}}
 - 不明确: {{"tool": "unknown", "params": {{}}}}
 """
-                    },
-                    {"role": "user", "content": query}
-                ],
-                temperature=0
-            )
-            
-            result = json.loads(response.choices[0].message.content)
-            print(f"   AI理解: {result}")
-            
-            if result.get("tool") != "unknown":
-                tool_result = mcp_client.call_tool(result["tool"], **result.get("params", {}))
-                print(f"   执行结果: {tool_result}")
-            
-        except Exception as e:
-            print(f"   ❌ 错误: {e}")
+                        },
+                        {"role": "user", "content": query}
+                    ],
+                    temperature=0
+                )
+                
+                # 获取响应内容
+                content = response.choices[0].message.content
+                print(f"   AI原始响应: {content}")
+                
+                # 清理代码块标记（如果有）
+                if content.strip().startswith('```'):
+                    # 移除开头的```json或```标记
+                    lines = content.strip().split('\n')
+                    content = '\n'.join(lines[1:-1])  # 去掉第一行和最后一行
+                
+                # 尝试解析JSON
+                result = json.loads(content)
+                print(f"   AI理解: {result}")
+                
+                if result.get("tool") != "unknown":
+                    tool_result = mcp_client.call_tool(result["tool"], **result.get("params", {}))
+                    print(f"   执行结果: {tool_result}")
+                
+            except Exception as e:
+                print(f"   ❌ 错误: {e}")
+                break  # 如果出错就停止尝试
+    
+    # 演示如何手动调用工具(即使AI不可用)
+    print("\n   💡 提示: 即使AI不可用,您也可以直接手动调用工具:")
+    print("      示例:")
+    print("      from mcp_client_simple import create_simple_mcp_client")
+    print("      client = create_simple_mcp_client()")
+    print("      client.call_tool('navigate', origin='上海', destination='北京')")
 else:
     print("\n⚠️  未配置 API_KEY,跳过 AI 集成测试")
     print("   提示: 配置 .env 文件后可测试完整的 AI + MCP 功能")

@@ -116,8 +116,9 @@ class TestWeatherEdgeCases(unittest.TestCase):
     def test_empty_city_name(self, mock_open):
         result = get_weather("", "明天")
         
-        self.assertIsNotNone(result)
-        mock_open.assert_called_once()
+        # 空城市名应该返回错误,不应该调用浏览器
+        self.assertIn("错误", result)
+        mock_open.assert_not_called()
     
     @patch('mcp_servers_simple.weather_tools.webbrowser.open')
     def test_special_characters_in_city(self, mock_open):

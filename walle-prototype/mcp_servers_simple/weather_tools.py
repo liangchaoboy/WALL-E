@@ -23,11 +23,19 @@ def get_weather(city: str, date: str = "today") -> str:
     
     city = city.strip()
     date = date.strip() if date else "today"
+    
+    # Don't proceed if city is still empty after stripping
+    if not city:
+        return "错误: 城市名称不能为空"
+    
     query = f"{city}{date}天气"
     url = f"https://www.baidu.com/s?wd={quote(query)}"
-    webbrowser.open(url)
     
-    return f"已打开{city}{date}天气查询"
+    try:
+        webbrowser.open(url)
+        return f"已打开{city}{date}天气查询"
+    except Exception as e:
+        return f"打开天气查询失败: {e}"
 
 def compare_weather(city1: str, city2: str) -> str:
     """
