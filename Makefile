@@ -8,6 +8,4 @@ run-mcp:
 # ------------------------------------------------------------------------
 
 run-serve:
-	cd WALL-E-SERVE; 
-	go clean -cache;
-	go run main.go
+	cd WALL-E-SERVE; go clean -cache; go run main.go
