@@ -6,8 +6,12 @@
 
 import importlib
 import sys
+import os
 from pathlib import Path
 from typing import Dict, List, Any, Optional
+from logger_config import setup_logger
+
+logger = setup_logger("WALL-E.SimpleMCPClient", level=os.getenv("LOG_LEVEL", "INFO"))
 
 class SimpleMCPClient:
     """简化版 MCP 客户端,不依赖 mcp 库"""
@@ -24,6 +28,7 @@ class SimpleMCPClient:
             module_path: 模块文件路径
         """
         try:
+            logger.debug(f"尝试注册工具模块: {module_name}, 路径: {module_path}")
             sys.path.insert(0, str(Path(module_path).parent))
             module_file = Path(module_path).stem
             module = importlib.import_module(module_file)
@@ -31,11 +36,15 @@ class SimpleMCPClient:
             if hasattr(module, 'TOOLS'):
                 for tool_name, tool_func in module.TOOLS.items():
                     self.tools[tool_name] = tool_func
+                    logger.debug(f"注册工具: {tool_name}")
+                logger.info(f"成功注册工具模块: {module_name} ({len(module.TOOLS)} 个工具)")
                 print(f"✅ 注册工具模块: {module_name} ({len(module.TOOLS)} 个工具)")
             else:
+                logger.error(f"模块 {module_file} 没有 TOOLS 字典")
                 print(f"❌ 模块 {module_file} 没有 TOOLS 字典")
                 
         except Exception as e:
+            logger.error(f"注册工具模块失败 ({module_name}): {e}", exc_info=True)
             print(f"❌ 注册工具模块失败 ({module_name}): {e}")
     
     def list_tools(self) -> List[str]:
@@ -55,13 +64,17 @@ class SimpleMCPClient:
         """
         if tool_name not in self.tools:
             available = ', '.join(self.list_tools())
+            logger.warning(f"工具 '{tool_name}' 不存在,可用工具: {available}")
             return f"工具 '{tool_name}' 不存在。可用工具: {available}"
         
         try:
+            logger.debug(f"调用工具: {tool_name}, 参数: {kwargs}")
             tool_func = self.tools[tool_name]
             result = tool_func(**kwargs)
+            logger.debug(f"工具 {tool_name} 返回结果: {result}")
             return result
         except Exception as e:
+            logger.error(f"工具 {tool_name} 调用失败: {e}", exc_info=True)
             return f"工具调用失败: {e}"
     
     def get_tool_info(self, tool_name: str) -> Optional[str]:
@@ -82,6 +95,7 @@ def create_simple_mcp_client(tools_dir: str = None) -> SimpleMCPClient:
     Returns:
         配置好的 SimpleMCPClient 实例
     """
+    logger.info("创建简化版 MCP 客户端...")
     client = SimpleMCPClient()
     
     if tools_dir is None:
@@ -89,6 +103,7 @@ def create_simple_mcp_client(tools_dir: str = None) -> SimpleMCPClient:
     else:
         tools_dir = Path(tools_dir)
     
+    logger.debug(f"工具模块目录: {tools_dir}")
     tool_modules = {
         "navigation": tools_dir / "navigation_tools.py",
         "weather": tools_dir / "weather_tools.py",
@@ -99,8 +114,10 @@ def create_simple_mcp_client(tools_dir: str = None) -> SimpleMCPClient:
         if path.exists():
             client.register_tools_module(name, str(path))
         else:
+            logger.warning(f"工具模块文件不存在: {path}")
             print(f"⚠️  工具模块文件不存在: {path}")
     
+    logger.info(f"简化版 MCP 客户端创建完成,共加载 {len(client.tools)} 个工具")
     return client
 
 if __name__ == "__main__":

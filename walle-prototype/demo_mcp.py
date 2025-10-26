@@ -9,14 +9,19 @@ import json
 from openai import OpenAI
 from dotenv import load_dotenv
 from mcp_client import create_mcp_client
+from logger_config import setup_logger
+
+logger = setup_logger("WALL-E.Demo", level=os.getenv("LOG_LEVEL", "INFO"))
 
 load_dotenv()
 
+logger.info("WALL-E MCP 功能演示启动")
 print("=" * 60)
 print("🤖 WALL-E MCP 功能演示")
 print("=" * 60)
 
 print("\n1️⃣  初始化 MCP 客户端...")
+logger.info("开始初始化 MCP 客户端...")
 mcp_client = create_mcp_client()
 
 print("\n2️⃣  列出所有可用工具:")
@@ -29,8 +34,10 @@ for i, tool in enumerate(sorted(unique_tools), 1):
     print(f"   {i}. {tool}")
 
 print("\n3️⃣  测试各个工具:")
+logger.info("开始测试各个工具")
 
 print("\n   📍 导航工具测试:")
+logger.info("测试导航工具")
 print("      - navigate(上海, 北京)")
 result = mcp_client.call_tool("navigate", origin="上海", destination="北京")
 print(f"      ✅ {result}")
