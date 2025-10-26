@@ -52,6 +52,26 @@ def listen():
             print(f"❌ 错误: {e}")
             return None
 
+def text_input():
+    """文字输入"""
+    try:
+        text = input("\n💬 请输入(输入'退出'结束): ").strip()
+        if text:
+            logger.info(f"文字输入成功: {text}")
+            print(f"📝 输入: {text}")
+            return text
+        return None
+    except (EOFError, KeyboardInterrupt):
+        logger.info("用户中断输入")
+        return "退出"
+
+def get_user_input(mode):
+    """根据模式获取用户输入"""
+    if mode == "voice":
+        return listen()
+    else:
+        return text_input()
+
 def understand_with_mcp(text):
     """AI 理解用户意图并选择 MCP 工具"""
     logger.info(f"开始 AI 理解用户输入: {text}")
@@ -120,16 +140,29 @@ def main():
     print("=" * 60)
     print("🤖 WALL-E 语音助手 (简化版 MCP 架构)")
     print("支持导航、天气、音乐等多种功能")
-    print("说话即可操作,说'退出'结束")
+    print("支持语音输入和文字输入")
     print("=" * 60)
+    
+    print("\n请选择输入模式:")
+    print("1. 语音输入 (按回车键)")
+    print("2. 文字输入 (输入 2)")
+    
+    mode_choice = input("\n选择模式 [1]: ").strip()
+    input_mode = "text" if mode_choice == "2" else "voice"
+    
+    mode_text = "文字输入" if input_mode == "text" else "语音输入"
+    logger.info(f"用户选择输入模式: {mode_text}")
+    print(f"\n✅ 已选择: {mode_text}")
     
     tool_count = len(mcp_client.list_tools())
     logger.info(f"已加载 {tool_count} 个 MCP 工具")
-    print(f"\n📦 已加载 {tool_count} 个工具")
+    print(f"📦 已加载 {tool_count} 个工具")
+    print("输入'退出'或'结束'可结束程序")
+    print("=" * 60)
     
     logger.info("进入主循环,等待用户输入...")
     while True:
-        text = listen()
+        text = get_user_input(input_mode)
         if not text:
             continue
         
