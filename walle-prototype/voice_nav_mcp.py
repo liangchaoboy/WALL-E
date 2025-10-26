@@ -40,6 +40,24 @@ def listen():
             print(f"❌ 错误: {e}")
             return None
 
+def text_input():
+    """文字输入模式"""
+    try:
+        text = input("\n💬 请输入(输入'退出'结束): ").strip()
+        if text:
+            print(f"📝 输入: {text}")
+            return text
+        return None
+    except (EOFError, KeyboardInterrupt):
+        return "退出"
+
+def get_user_input(mode):
+    """根据模式获取用户输入"""
+    if mode == "voice":
+        return listen()
+    else:
+        return text_input()
+
 def understand_with_mcp(text):
     """AI 理解用户意图并选择 MCP 工具"""
     tools_description = """
@@ -96,13 +114,26 @@ def main():
     print("=" * 60)
     print("🤖 WALL-E 语音助手 (MCP 架构版本)")
     print("支持导航、天气、音乐等多种功能")
-    print("说话即可操作,说'退出'结束")
     print("=" * 60)
     
     print(f"\n📦 已加载 {len(set(t for t in mcp_client.list_tools() if '.' not in t))} 个工具")
     
+    print("\n请选择输入模式:")
+    print("1. 语音输入 (按回车键)")
+    print("2. 文字输入 (输入 2)")
+    
+    mode_choice = input("\n选择模式 [1]: ").strip()
+    input_mode = "text" if mode_choice == "2" else "voice"
+    
+    if input_mode == "voice":
+        print("\n✅ 已启用语音输入模式 - 说话即可操作,说'退出'结束")
+    else:
+        print("\n✅ 已启用文字输入模式 - 输入命令,输入'退出'结束")
+    
+    print("=" * 60)
+    
     while True:
-        text = listen()
+        text = get_user_input(input_mode)
         if not text:
             continue
         
